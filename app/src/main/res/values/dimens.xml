@@ -4,5 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="nav_drawer_width">280dp</dimen>
     <dimen name="drawer_image_height">180dp</dimen>
-    <dimen name="content_vertical_offset">121dp</dimen>
+    <dimen name="content_vertical_offset">81dp</dimen>
+    <dimen name="navbar_vertical_offset">25dp</dimen>
 </resources>

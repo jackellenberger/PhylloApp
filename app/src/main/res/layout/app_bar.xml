@@ -5,6 +5,5 @@
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/primaryColor"
-    android:label="@string/app_name">
+    android:background="@color/primaryColor">
 </android.support.v7.widget.Toolbar>

@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,28 +15,43 @@ import android.view.View;
 
 public class MainActivity extends ActionBarActivity {
 
-    //TOOLBAR
+    //TOOLBAR / APPBAR
     private Toolbar toolbar;
+
     //TABS
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
     CharSequence Titles[] = {"User", "Local"};
     int Numboftabs = 2;
+
     //DRAWER
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    String USERNAME = "Default Username";
+    String USEREMAIL = "quokka@uchicago.edu";
+    int USERICON = R.drawable.default_user_icon;
+    RecyclerView mRecyclerView;
+    RecyclerView.Adapter mAdapter;
+    RecyclerView.LayoutManager mRecyclerLayoutManager;
+
+    //DRAWER CONTENTS
+    String LEFT_TITLES[] = {"Edit User","Statistics","Reputation","Logout"};
+    int LEFT_ICONS[] = {R.drawable.default_icon_error,R.drawable.default_icon_error,R.drawable.default_icon_error,R.drawable.default_icon_error};
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("Phyllo");
+
+        ///// TOOLBAR / APPBAR /////
+        setTitle("Phyllo"); //Text displayed in App Bar
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        ///// TABS /////
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
         adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
         // Assigning ViewPager View and setting the adapter
@@ -50,22 +67,25 @@ public class MainActivity extends ActionBarActivity {
                 return getResources().getColor(R.color.accentColor);
             }
         });
-
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(pager);
         tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
             // This method will be invoked when a new page becomes selected.
             @Override
             public void onPageSelected(int position) {
-                if (position == 0){
-                    mDrawerLayout.setScrimColor(0x99000000);
+                //When in User tab...
+                if (position == 0) {
+                    //mDrawerLayout.setScrimColor(0x99000000);
+                    //mDrawerToggle.setDrawerIndicatorEnabled(true); counterpart to false call in else
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.right_drawer));
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.left_drawer));
 
                 }
-                else if (position == 1){
-                    mDrawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
+                //When in Location Tab...
+                else if (position == 1) {
+                    //setScrimColor transparent = stops background from darkening
+                    //mDrawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
+                    //mDrawerToggle.setDrawerIndicatorEnabled(false); //TODO: Animate left hamburger hiding, add hamburger menu to the right
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.right_drawer));
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.left_drawer));
 
@@ -86,9 +106,25 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        // Create Drawer Layout
-        DrawerLayout drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ///// RECYCLER / DRAWER CONTENTS /////
+        // Assigning the RecyclerView Object to the xml View
+        mRecyclerView = (RecyclerView) findViewById(R.id.left_RecyclerView);
+        // Letting the system know that the list objects are of fixed size (we won't change the number of tabs)
+        mRecyclerView.setHasFixedSize(true);
+        //create the adapter for programatically changing data displayed
+        // And passing the titles,icons,header view name, header view email,
+        // and header view profile picture
+        mAdapter = new LeftRecyclerAdapter(LEFT_TITLES,LEFT_ICONS,USERNAME,USEREMAIL,USERICON);
+        // Setting the adapter to RecyclerView
+        mRecyclerView.setAdapter(mAdapter);
+        // Creating a layout Manager
+        mRecyclerLayoutManager = new LinearLayoutManager(this);
+        // Setting the layout Manager
+        mRecyclerView.setLayoutManager(mRecyclerLayoutManager);
 
+
+        ///// DRAWER /////
+        // Create Drawer Layout
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close){
             @Override
@@ -139,7 +175,9 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+
     }
+
 /*
 
 */

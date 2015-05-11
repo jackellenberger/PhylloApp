@@ -34,7 +34,7 @@
             android:textColor="#ffffff"
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
-            android:text="jellenberger@uchicago.edu"
+            android:text="quokka@uchicago.edu"
             android:textSize="14sp"
             android:textStyle="normal"
 

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class LeftRecyclerAdapter extends RecyclerView.Adapter<LeftRecyclerAdapter.ViewHolder> {
+public class LeftDrawerRecyclerAdapter extends RecyclerView.Adapter<LeftDrawerRecyclerAdapter.ViewHolder> {
 
     private static final int TYPE_HEADER = 0;  // Declaring Variable to Understand which View is being worked on
     // IF the view under inflation and population is header or Item
@@ -63,7 +63,7 @@ public class LeftRecyclerAdapter extends RecyclerView.Adapter<LeftRecyclerAdapte
 
 
 
-    LeftRecyclerAdapter(String Titles[],int Icons[],String Name,String Email, int Profile){ // MyAdapter Constructor with titles and icons parameter
+    LeftDrawerRecyclerAdapter(String Titles[], int Icons[], String Name, String Email, int Profile){ // MyAdapter Constructor with titles and icons parameter
         // titles, icons, name, email, profile pic are passed from the main activity as we
         mNavTitles = Titles;                //have seen earlier
         mIcons = Icons;
@@ -84,7 +84,7 @@ public class LeftRecyclerAdapter extends RecyclerView.Adapter<LeftRecyclerAdapte
     // and pass it to the view holder
 
     @Override
-    public LeftRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LeftDrawerRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         if (viewType == TYPE_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_row,parent,false); //Inflating the layout
@@ -97,7 +97,7 @@ public class LeftRecyclerAdapter extends RecyclerView.Adapter<LeftRecyclerAdapte
 
         } else if (viewType == TYPE_HEADER) {
 
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_header,parent,false); //Inflating the layout
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_drawer_header,parent,false); //Inflating the layout
 
             ViewHolder vhHeader = new ViewHolder(v,viewType); //Creating ViewHolder and passing the object of type view
 
@@ -113,7 +113,7 @@ public class LeftRecyclerAdapter extends RecyclerView.Adapter<LeftRecyclerAdapte
     // Tells us item at which position is being constructed to be displayed and the holder id of the holder object tell us
     // which view type is being created 1 for item row
     @Override
-    public void onBindViewHolder(LeftRecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(LeftDrawerRecyclerAdapter.ViewHolder holder, int position) {
         if(holder.Holderid ==1) {                              // as the list view is going to be called after the header view so we decrement the
             // position by 1 and pass it to the holder while setting the text and image
             holder.textView.setText(mNavTitles[position - 1]); // Setting the Text with the array of our Titles

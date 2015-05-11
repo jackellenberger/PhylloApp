@@ -25,20 +25,27 @@ public class MainActivity extends ActionBarActivity {
     CharSequence Titles[] = {"User", "Local"};
     int Numboftabs = 2;
 
-    //DRAWER
+    //DRAWER - LEFT
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     String USERNAME = "Default Username";
     String USEREMAIL = "quokka@uchicago.edu";
     int USERICON = R.drawable.default_user_icon;
-    RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
-    RecyclerView.LayoutManager mRecyclerLayoutManager;
+    RecyclerView mLeftDrawerRecyclerView;
+    RecyclerView.Adapter mLeftDrawerAdapter;
+    RecyclerView.LayoutManager mLeftRecyclerLayoutManager;
+
+    //DRAWER - RIGHT
+    String LOCATIONNAME = "Default Location";
+    RecyclerView mRightDrawerRecyclerView;
+    RecyclerView.Adapter mRightDrawerAdapter;
+    RecyclerView.LayoutManager mRightRecyclerLayoutManager;
 
     //DRAWER CONTENTS
-    String LEFT_TITLES[] = {"Edit User","Statistics","Reputation","Logout"};
-    int LEFT_ICONS[] = {R.drawable.default_icon_error,R.drawable.default_icon_error,R.drawable.default_icon_error,R.drawable.default_icon_error};
-
+    String LEFT_TITLES[] = {"Statistics","Reputation","Edit User","Logout"};
+    int LEFT_ICONS[] = {R.drawable.ic_assessment_grey600_18dp,R.drawable.ic_assignment_ind_grey600_18dp,R.drawable.ic_face_grey600_18dp,R.drawable.ic_highlight_remove_grey600_18dp};
+    String RIGHT_TITLES[] = {"Statistics","Best Of","Most Viral","Edit Location","Nearby Locations"};
+    int RIGHT_ICONS[] = {R.drawable.ic_assessment_grey600_18dp,R.drawable.ic_grade_grey600_18dp,R.drawable.ic_bug_report_grey600_18dp,R.drawable.ic_rate_review_grey600_18dp,R.drawable.ic_pin_drop_grey600_18dp};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,19 +115,27 @@ public class MainActivity extends ActionBarActivity {
 
         ///// RECYCLER / DRAWER CONTENTS /////
         // Assigning the RecyclerView Object to the xml View
-        mRecyclerView = (RecyclerView) findViewById(R.id.left_RecyclerView);
+        mLeftDrawerRecyclerView = (RecyclerView) findViewById(R.id.left_RecyclerView);
         // Letting the system know that the list objects are of fixed size (we won't change the number of tabs)
-        mRecyclerView.setHasFixedSize(true);
+        mLeftDrawerRecyclerView.setHasFixedSize(true);
         //create the adapter for programatically changing data displayed
         // And passing the titles,icons,header view name, header view email,
         // and header view profile picture
-        mAdapter = new LeftRecyclerAdapter(LEFT_TITLES,LEFT_ICONS,USERNAME,USEREMAIL,USERICON);
+        mLeftDrawerAdapter = new LeftDrawerRecyclerAdapter(LEFT_TITLES,LEFT_ICONS,USERNAME,USEREMAIL,USERICON);
         // Setting the adapter to RecyclerView
-        mRecyclerView.setAdapter(mAdapter);
+        mLeftDrawerRecyclerView.setAdapter(mLeftDrawerAdapter);
         // Creating a layout Manager
-        mRecyclerLayoutManager = new LinearLayoutManager(this);
+        mLeftRecyclerLayoutManager = new LinearLayoutManager(this);
         // Setting the layout Manager
-        mRecyclerView.setLayoutManager(mRecyclerLayoutManager);
+        mLeftDrawerRecyclerView.setLayoutManager(mLeftRecyclerLayoutManager);
+
+        //And again for the right drawer
+        mRightDrawerRecyclerView = (RecyclerView) findViewById(R.id.right_RecyclerView);
+        mRightDrawerRecyclerView.setHasFixedSize(true);
+        mRightDrawerAdapter = new RightDrawerRecyclerAdapter(RIGHT_TITLES,RIGHT_ICONS,LOCATIONNAME);
+        mRightDrawerRecyclerView.setAdapter(mRightDrawerAdapter);
+        mRightRecyclerLayoutManager = new LinearLayoutManager(this);
+        mRightDrawerRecyclerView.setLayoutManager(mRightRecyclerLayoutManager);
 
 
         ///// DRAWER /////

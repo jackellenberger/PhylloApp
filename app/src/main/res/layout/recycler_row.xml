@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
     android:background="#ffffff"
     android:orientation="horizontal">
 
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="12dp"
-        android:paddingTop="4dp"
+
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="RecyclerView Element"
         android:id="@+id/rowText" />

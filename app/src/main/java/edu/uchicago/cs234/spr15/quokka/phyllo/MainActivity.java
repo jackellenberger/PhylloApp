@@ -8,12 +8,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
+
+    //TODO: Implement Floating Action Button
 
     //TOOLBAR / APPBAR
     private Toolbar toolbar;
@@ -42,8 +46,10 @@ public class MainActivity extends ActionBarActivity {
     RecyclerView.LayoutManager mRightRecyclerLayoutManager;
 
     //DRAWER CONTENTS
-    String LEFT_TITLES[] = {"Statistics","Reputation","Edit User","Logout"};
-    int LEFT_ICONS[] = {R.drawable.ic_assessment_grey600_18dp,R.drawable.ic_assignment_ind_grey600_18dp,R.drawable.ic_face_grey600_18dp,R.drawable.ic_highlight_remove_grey600_18dp};
+    //TODO: Find a way to have settings and feedback stuck to the bottom of the drawer. This will probably take another recyclerView ugh
+    //TODO: Figure out how to do drawables the correct way, where they're the correct res for any display
+    String LEFT_TITLES[] = {"Statistics","Reputation","Edit User","Logout","Settings","Feedback"};
+    int LEFT_ICONS[] = {R.drawable.ic_assessment_grey600_18dp,R.drawable.ic_assignment_ind_grey600_18dp,R.drawable.ic_face_grey600_18dp,R.drawable.ic_highlight_remove_grey600_18dp, R.drawable.ic_settings_grey600_18dp,R.drawable.default_icon_error};
     String RIGHT_TITLES[] = {"Statistics","Best Of","Most Viral","Edit Location","Nearby Locations"};
     int RIGHT_ICONS[] = {R.drawable.ic_assessment_grey600_18dp,R.drawable.ic_grade_grey600_18dp,R.drawable.ic_bug_report_grey600_18dp,R.drawable.ic_rate_review_grey600_18dp,R.drawable.ic_pin_drop_grey600_18dp};
 
@@ -98,13 +104,11 @@ public class MainActivity extends ActionBarActivity {
 
                 }
             }
-
             // This method will be invoked when the current page is scrolled
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 // Code goes here
             }
-
             // Called when the scroll state changes:
             // SCROLL_STATE_IDLE, SCROLL_STATE_DRAGGING, SCROLL_STATE_SETTLING
             @Override
@@ -137,6 +141,43 @@ public class MainActivity extends ActionBarActivity {
         mRightRecyclerLayoutManager = new LinearLayoutManager(this);
         mRightDrawerRecyclerView.setLayoutManager(mRightRecyclerLayoutManager);
 
+        ///// ONTOUCH EVENT HANDLER FOR NAV DRAWER /////
+        final GestureDetector mGestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
+            @Override public boolean onSingleTapUp(MotionEvent e) {
+                return true;
+            }
+        });
+
+        mLeftDrawerRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+                View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+
+                if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
+                    mDrawerLayout.closeDrawers();
+                    Toast.makeText(MainActivity.this, "The Item Clicked is: " + recyclerView.getChildPosition(child), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+            @Override
+            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) { }
+        });
+        mRightDrawerRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+                View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+
+                if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
+                    mDrawerLayout.closeDrawers();
+                    Toast.makeText(MainActivity.this, "The Item Clicked is: " + recyclerView.getChildPosition(child), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+            @Override
+            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) { }
+        });
 
         ///// DRAWER /////
         // Create Drawer Layout

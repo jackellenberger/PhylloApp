@@ -7,3 +7,4 @@
     android:layout_height="wrap_content"
     android:background="@color/primaryColor">
 </android.support.v7.widget.Toolbar>
+<!-- TODO: Allow this to scroll left and right with the tabs, hiding the left hamburger button and revealing the left one -->

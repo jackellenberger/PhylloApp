@@ -5,5 +5,7 @@
     <dimen name="nav_drawer_width">280dp</dimen>
     <dimen name="drawer_image_height">180dp</dimen>
     <dimen name="content_vertical_offset">81dp</dimen>
-    <dimen name="navbar_vertical_offset">25dp</dimen>
+    <dimen name="nav_drawer_vertical_offset">25dp</dimen>
+    <dimen name="nav_header_height">178dp</dimen>
+    <dimen name="nav_left_title_margin">16dp</dimen>
 </resources>

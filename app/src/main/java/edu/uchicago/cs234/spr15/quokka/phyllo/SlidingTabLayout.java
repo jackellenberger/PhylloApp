@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+//TODO: Made SlidingTabLayout / SlidingTabStrip hide on scroll
+
 package edu.uchicago.cs234.spr15.quokka.phyllo;
 
 import android.content.Context;

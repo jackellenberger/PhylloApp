@@ -4,14 +4,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-public class ViewPagerAdapter extends FragmentStatePagerAdapter {
+public class AdapterSlidingTab extends FragmentStatePagerAdapter {
 
-    CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
-    int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
+    CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when AdapterSlidingTab is created
+    int NumbOfTabs; // Store the number of tabs, this will also be passed when the AdapterSlidingTab is created
 
 
     // Build a Constructor and assign the passed Values to appropriate values in the class
-    public ViewPagerAdapter(FragmentManager fm,CharSequence mTitles[], int mNumbOfTabsumb) {
+    public AdapterSlidingTab(FragmentManager fm, CharSequence mTitles[], int mNumbOfTabsumb) {
         super(fm);
 
         this.Titles = mTitles;
@@ -25,15 +25,13 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         if(position == 0) // if the position is 0 we are returning the First tab
         {
-            return new Tab1();
+            return new ContentUserTab();
         }
         else             // As we are having 2 tabs if the position is now 0 it must be 1 so we are returning second tab
         {
-            Tab2 tab2 = new Tab2();
-            return tab2;
+            ContentLocationTab ContentLocationTab = new ContentLocationTab();
+            return ContentLocationTab;
         }
-
-
     }
 
     // This method return the titles for the Tabs in the Tab Strip

@@ -1,7 +1,6 @@
 package edu.uchicago.cs234.spr15.quokka.phyllo;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -27,7 +26,7 @@ public class MainActivity extends ActionBarActivity {
 
     //TABS
     ViewPager pager;
-    ViewPagerAdapter adapter;
+    AdapterSlidingTab adapter;
     SlidingTabLayout tabs;
     CharSequence Titles[] = {"User", "Local"};
     int Numboftabs = 2;
@@ -60,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
         ///// TOOLBAR / APPBAR /////
         setTitle("Phyllo"); //Text displayed in App Bar
@@ -69,8 +68,8 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         ///// TABS /////
-        // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
-        adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
+        // Creating The AdapterSlidingTab and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
+        adapter =  new AdapterSlidingTab(getSupportFragmentManager(),Titles,Numboftabs);
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) findViewById(R.id.tab_view_pager);
         pager.setAdapter(adapter);
@@ -129,7 +128,7 @@ public class MainActivity extends ActionBarActivity {
         //create the adapter for programatically changing data displayed
         // And passing the titles,icons,header view name, header view email,
         // and header view profile picture
-        mLeftDrawerAdapter = new LeftDrawerRecyclerAdapter(LEFT_TITLES,LEFT_ICONS,USERNAME,USEREMAIL,USERICON);
+        mLeftDrawerAdapter = new AdapterLeftDrawerRecycler(LEFT_TITLES,LEFT_ICONS,USERNAME,USEREMAIL,USERICON);
         // Setting the adapter to RecyclerView
         mLeftDrawerRecyclerView.setAdapter(mLeftDrawerAdapter);
         // Creating a layout Manager
@@ -140,7 +139,7 @@ public class MainActivity extends ActionBarActivity {
         //And again for the right drawer
         mRightDrawerRecyclerView = (RecyclerView) findViewById(R.id.right_RecyclerView);
         mRightDrawerRecyclerView.setHasFixedSize(true);
-        mRightDrawerAdapter = new RightDrawerRecyclerAdapter(RIGHT_TITLES,RIGHT_ICONS,LOCATIONNAME);
+        mRightDrawerAdapter = new AdapterRightDrawerRecycler(RIGHT_TITLES,RIGHT_ICONS,LOCATIONNAME);
         mRightDrawerRecyclerView.setAdapter(mRightDrawerAdapter);
         mRightRecyclerLayoutManager = new LinearLayoutManager(this);
         mRightDrawerRecyclerView.setLayoutManager(mRightRecyclerLayoutManager);
@@ -160,8 +159,7 @@ public class MainActivity extends ActionBarActivity {
 
                 if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
                     mDrawerLayout.closeDrawers();
-                    Toast.makeText(MainActivity.this, "The Item Clicked is: " + recyclerView.getChildPosition(child), Toast.LENGTH_SHORT).show();
-                    onTouchDrawer(recyclerView.getChildPosition(child));
+                    onTouchLeftDrawer(recyclerView.getChildPosition(child));
                     return true;
                 }
                 return false;
@@ -176,7 +174,8 @@ public class MainActivity extends ActionBarActivity {
 
                 if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
                     mDrawerLayout.closeDrawers();
-                    Toast.makeText(MainActivity.this, "The Item Clicked is: " + recyclerView.getChildPosition(child), Toast.LENGTH_SHORT).show();
+                    onTouchRightDrawer(recyclerView.getChildPosition(child));
+                    //Toast.makeText(MainActivity.this, "The Item Clicked is: " + recyclerView.getChildPosition(child), Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 return false;
@@ -218,32 +217,35 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
+
     ///// HELPER FUNCTIONS FOR OPENING FRAGMENTS /////
     private void openFragment(final Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.drawer_layout, fragment) //drawer_Layout?
-                .commit();
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_top, R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
+        ft.replace(R.id.drawer_layout, fragment).addToBackStack(null).commit();
+        //TODO: make proper fragment handling mechanic. pushing and popping off the FragMan is poor practice and doesn't support nesting
     }
 
-    public void onTouchDrawer(final int position) {
+
+    public void onTouchLeftDrawer(final int position) {
         //{"Statistics","Reputation","Edit User","Logout","Settings","Feedback"}
         switch (position) {
             case 1:
-                openFragment(new userStatisticsFragment());
+                openFragment(new FragmentUserStatistics());
                 break;
             case 2:
-                //openFragment(new userReputationFragment());
+                openFragment(new FragmentUserReputation());
                 break;
             case 3:
-                //openFragment(new userEditFragment());
+                openFragment(new FragmentUserEdit());
                 break;
             case 4:
                 //TODO: LOGOUT ACTION
                 Toast.makeText(MainActivity.this, "Logged Out. JK TODO", Toast.LENGTH_SHORT).show();
                 break;
             case 5:
-                //openFragment(new appSettingsFragment());
+                openFragment(new FragmentAppSettings());
                 break;
             case 6:
                 //TODO: Test feedback on an actual device - it doesn't seem to work on the emulator
@@ -257,6 +259,28 @@ public class MainActivity extends ActionBarActivity {
                 // need this to prompts email client only
                 email.setType("message/rfc822");
                 startActivity(Intent.createChooser(email, "Choose an Email client :"));
+                break;
+            default:
+                return;
+        }
+    }
+    public void onTouchRightDrawer(final int position) {
+        //{"Statistics","Best Of","Most Viral","Edit Location","Nearby Locations"}
+        switch (position) {
+            case 1:
+                openFragment(new FragmentLocationStatistics());
+                break;
+            case 2:
+                openFragment(new FragmentLocationBestOf());
+                break;
+            case 3:
+                openFragment(new FragmentLocationMostViral());
+                break;
+            case 4:
+                openFragment(new FragmentLocationEdit());
+                break;
+            case 5:
+                openFragment(new FragmentLocationNearby());
                 break;
             default:
                 return;

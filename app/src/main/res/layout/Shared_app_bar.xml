@@ -2,9 +2,10 @@
 <!--for white text/icons, we change the theme to Dark-->
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     android:background="@color/primaryColor">
 </android.support.v7.widget.Toolbar>
 <!-- TODO: Allow this to scroll left and right with the tabs, hiding the left hamburger button and revealing the left one -->

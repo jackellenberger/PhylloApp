@@ -230,7 +230,7 @@ public class MainActivity extends ActionBarActivity {
         //{"Statistics","Reputation","Edit User","Logout","Settings","Feedback"}
         switch (position) {
             case 1:
-                //openFragment(new userStatisticsFragment());
+                openFragment(new userStatisticsFragment());
                 break;
             case 2:
                 //openFragment(new userReputationFragment());

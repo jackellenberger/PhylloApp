@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- APP BAR -->
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar"
+        android:label="@string/app_name" />
+
+    <TextView
+        android:id="@+id/user_settings"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="User Specific Settings Page"
+        android:textColor="@color/primaryColor"
+        android:background="@color/background_material_light"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        />
+
+</LinearLayout>

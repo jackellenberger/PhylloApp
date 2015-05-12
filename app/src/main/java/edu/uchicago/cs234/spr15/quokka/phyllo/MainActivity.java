@@ -1,6 +1,9 @@
 package edu.uchicago.cs234.spr15.quokka.phyllo;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -48,6 +51,7 @@ public class MainActivity extends ActionBarActivity {
     //DRAWER CONTENTS
     //TODO: Find a way to have settings and feedback stuck to the bottom of the drawer. This will probably take another recyclerView ugh
     //TODO: Figure out how to do drawables the correct way, where they're the correct res for any display
+    //TODO: related: get higher res images
     String LEFT_TITLES[] = {"Statistics","Reputation","Edit User","Logout","Settings","Feedback"};
     int LEFT_ICONS[] = {R.drawable.ic_assessment_grey600_18dp,R.drawable.ic_assignment_ind_grey600_18dp,R.drawable.ic_face_grey600_18dp,R.drawable.ic_highlight_remove_grey600_18dp, R.drawable.ic_settings_grey600_18dp,R.drawable.default_icon_error};
     String RIGHT_TITLES[] = {"Statistics","Best Of","Most Viral","Edit Location","Nearby Locations"};
@@ -148,6 +152,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+
         mLeftDrawerRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
@@ -156,6 +161,7 @@ public class MainActivity extends ActionBarActivity {
                 if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
                     mDrawerLayout.closeDrawers();
                     Toast.makeText(MainActivity.this, "The Item Clicked is: " + recyclerView.getChildPosition(child), Toast.LENGTH_SHORT).show();
+                    onTouchDrawer(recyclerView.getChildPosition(child));
                     return true;
                 }
                 return false;
@@ -178,6 +184,8 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) { }
         });
+
+
 
         ///// DRAWER /////
         // Create Drawer Layout
@@ -208,6 +216,51 @@ public class MainActivity extends ActionBarActivity {
                 mDrawerToggle.syncState();
             }
         });
+    }
+
+    ///// HELPER FUNCTIONS FOR OPENING FRAGMENTS /////
+    private void openFragment(final Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.drawer_layout, fragment) //drawer_Layout?
+                .commit();
+    }
+
+    public void onTouchDrawer(final int position) {
+        //{"Statistics","Reputation","Edit User","Logout","Settings","Feedback"}
+        switch (position) {
+            case 1:
+                //openFragment(new userStatisticsFragment());
+                break;
+            case 2:
+                //openFragment(new userReputationFragment());
+                break;
+            case 3:
+                //openFragment(new userEditFragment());
+                break;
+            case 4:
+                //TODO: LOGOUT ACTION
+                Toast.makeText(MainActivity.this, "Logged Out. JK TODO", Toast.LENGTH_SHORT).show();
+                break;
+            case 5:
+                //openFragment(new appSettingsFragment());
+                break;
+            case 6:
+                //TODO: Test feedback on an actual device - it doesn't seem to work on the emulator
+                String[] emails = {"quokka@uchicago.edu"};
+                String subject = "Sup Phyllo Devs";
+                String message = "We got a problem...";
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.putExtra(Intent.EXTRA_EMAIL, emails);
+                email.putExtra(Intent.EXTRA_SUBJECT, subject);
+                email.putExtra(Intent.EXTRA_TEXT, message);
+                // need this to prompts email client only
+                email.setType("message/rfc822");
+                startActivity(Intent.createChooser(email, "Choose an Email client :"));
+                break;
+            default:
+                return;
+        }
     }
 
     @Override

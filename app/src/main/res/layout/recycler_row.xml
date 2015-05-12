@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:paddingTop="8dp"
-    android:paddingBottom="8dp"
+    android:paddingBottom="6dp"
     android:layout_height="48dp"
     android:clickable="true"
     android:background="?attr/selectableItemBackground"
     android:orientation="horizontal">
 
     <!-- TODO: Get correct icons from https://github.com/google/material-design-icons or icons4android.com -->
+    <!-- TODO: find out why txt isn't centered correctly guh -->
 
     <ImageView
         android:layout_width="wrap_content"

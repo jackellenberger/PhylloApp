@@ -8,20 +8,18 @@
     android:background="?attr/selectableItemBackground"
     android:orientation="horizontal">
 
-    <!-- TODO: Get correct icons from https://github.com/google/material-design-icons or icons4android.com -->
-    <!-- TODO: find out why txt isn't centered correctly guh -->
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/rowIcon"
-        android:paddingStart="16dp"
-        android:src="@drawable/default_icon_error"/>
+        android:paddingStart="8dp"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="12dp"
+        android:paddingTop="2dp"
+        android:paddingStart="8dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="RecyclerView Element"
         android:id="@+id/rowText" />

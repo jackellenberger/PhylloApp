@@ -52,9 +52,9 @@ public class MainActivity extends ActionBarActivity {
     //TODO: Figure out how to do drawables the correct way, where they're the correct res for any display
     //TODO: related: get higher res images
     String LEFT_TITLES[] = {"Statistics","Reputation","Edit User","Logout","Settings","Feedback"};
-    int LEFT_ICONS[] = {R.drawable.ic_assessment_grey600_18dp,R.drawable.ic_assignment_ind_grey600_18dp,R.drawable.ic_face_grey600_18dp,R.drawable.ic_highlight_remove_grey600_18dp, R.drawable.ic_settings_grey600_18dp,R.drawable.default_icon_error};
+    int LEFT_ICONS[] = {R.mipmap.ic_assessment_grey600_48dp,R.mipmap.ic_assignment_ind_grey600_48dp,R.mipmap.ic_face_grey600_48dp,R.mipmap.ic_highlight_remove_grey600_48dp, R.mipmap.ic_settings_grey600_48dp,R.mipmap.ic_email_grey600_48dp};
     String RIGHT_TITLES[] = {"Statistics","Best Of","Most Viral","Edit Location","Nearby Locations"};
-    int RIGHT_ICONS[] = {R.drawable.ic_assessment_grey600_18dp,R.drawable.ic_grade_grey600_18dp,R.drawable.ic_bug_report_grey600_18dp,R.drawable.ic_rate_review_grey600_18dp,R.drawable.ic_pin_drop_grey600_18dp};
+    int RIGHT_ICONS[] = {R.mipmap.ic_assessment_grey600_48dp,R.mipmap.ic_grade_grey600_48dp,R.mipmap.ic_bug_report_grey600_48dp,R.mipmap.ic_rate_review_grey600_48dp,R.mipmap.ic_pin_drop_grey600_48dp};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

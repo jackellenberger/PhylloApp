@@ -11,8 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -30,6 +29,7 @@ public class MainActivity extends ActionBarActivity {
     SlidingTabLayout tabs;
     CharSequence Titles[] = {"User", "Local"};
     int Numboftabs = 2;
+    int navIconWidth = -1;
 
     //DRAWER - LEFT
     private DrawerLayout mDrawerLayout;
@@ -86,16 +86,16 @@ public class MainActivity extends ActionBarActivity {
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(pager);
         tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            private int currentPage;
             // This method will be invoked when a new page becomes selected.
             @Override
             public void onPageSelected(int position) {
+                currentPage = position;
                 //When in User tab...
                 if (position == 0) {
                     //mDrawerLayout.setScrimColor(0x99000000);
-                    //mDrawerToggle.setDrawerIndicatorEnabled(true); counterpart to false call in else
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.right_drawer));
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.left_drawer));
-
                 }
                 //When in Location Tab...
                 else if (position == 1) {
@@ -104,13 +104,21 @@ public class MainActivity extends ActionBarActivity {
                     //mDrawerToggle.setDrawerIndicatorEnabled(false); //TODO: Animate left hamburger hiding, add hamburger menu to the right
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.right_drawer));
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.left_drawer));
-
                 }
+            }
+            public final int getCurrentPage() {
+                return currentPage;
             }
             // This method will be invoked when the current page is scrolled
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                // Code goes here
+                if (toolbar.getNavigationIcon() != null) {
+                    navIconWidth = toolbar.getNavigationIcon().getMinimumWidth();
+                }
+                if (positionOffset != 0.0 && navIconWidth != -1) {
+                    toolbar.scrollTo((int) (positionOffset * toolbar.getWidth() * (navIconWidth*2.0) / toolbar.getWidth()), 0);
+                }
+
             }
             // Called when the scroll state changes:
             // SCROLL_STATE_IDLE, SCROLL_STATE_DRAGGING, SCROLL_STATE_SETTLING
@@ -215,6 +223,21 @@ public class MainActivity extends ActionBarActivity {
                 mDrawerToggle.syncState();
             }
         });
+
+        View mRightDrawerToggle = findViewById(R.id.rightHamburger);
+        mRightDrawerToggle.isClickable();
+        mRightDrawerToggle.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
+                }
+                else {
+                    mDrawerLayout.openDrawer(Gravity.RIGHT);
+                }
+            }
+        });
+
+
     }
 
 
@@ -287,13 +310,15 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        //mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.right_drawer));
-        return true;
+        rightDrawerToggle = menu;
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -309,7 +334,7 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
 
-    }
+    }*/
 
 /*
 

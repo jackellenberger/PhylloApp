@@ -7,5 +7,14 @@
     android:fitsSystemWindows="true"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     android:background="@color/primaryColor">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/rightHamburger"
+        android:clickable="true"
+        android:src="@mipmap/ic_menu_white_24dp"
+        android:padding="16dp"
+        android:layout_gravity="right"
+        android:translationX="50dp"
+        />
 </android.support.v7.widget.Toolbar>
-<!-- TODO: Allow this to scroll left and right with the tabs, hiding the left hamburger button and revealing the left one -->

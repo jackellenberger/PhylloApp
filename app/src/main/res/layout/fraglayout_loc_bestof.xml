@@ -5,11 +5,13 @@
     android:fitsSystemWindows="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <!-- SPACE FOR TRANSLUCENT STATUS BAR -->
+    <!-- SPACE FOR TRANSLUCENT STATUS BAR
     <Space
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:background="@color/primaryColor"/>
+    -->
+
     <!-- APP BAR -->
     <include
         android:id="@+id/app_bar"

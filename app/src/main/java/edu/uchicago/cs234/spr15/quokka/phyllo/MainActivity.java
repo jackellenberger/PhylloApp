@@ -14,12 +14,7 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -103,7 +98,6 @@ public class MainActivity extends ActionBarActivity {
                 currentPage = position;
                 //When in User tab...
                 if (position == 0) {
-                    //mDrawerLayout.setScrimColor(0x99000000);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.right_drawer));
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.left_drawer));
                 }
@@ -161,6 +155,7 @@ public class MainActivity extends ActionBarActivity {
         mRightDrawerRecyclerView.setAdapter(mRightDrawerAdapter);
         mRightRecyclerLayoutManager = new LinearLayoutManager(this);
         mRightDrawerRecyclerView.setLayoutManager(mRightRecyclerLayoutManager);
+
 
         ///// ONTOUCH EVENT HANDLER FOR NAV DRAWER /////
         final GestureDetector mGestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
@@ -250,6 +245,8 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         });
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.right_drawer));
+
     }
 
     ///// HELPER FUNCTIONS FOR OPENING FRAGMENTS /////

@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Created by jellenberger on 5/14/15.
  */
+
 public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecycler.StoryViewHolder>{
 
     private List<ClassStoryInfo> storyInfoList;
@@ -21,17 +22,17 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
 
     public static class StoryViewHolder extends RecyclerView.ViewHolder {
 
-        protected TextView vName;
-        protected TextView vSurname;
-        protected TextView vEmail;
         protected TextView vTitle;
+        protected TextView vSubTitle;
+        protected TextView vTags; //RecyclerView in the future?? ListView??
+        protected TextView vContent;
 
         public StoryViewHolder(View v) {
             super(v);
-            vName =  (TextView) v.findViewById(R.id.txtName);
-            vSurname = (TextView)  v.findViewById(R.id.txtSurname);
-            vEmail = (TextView)  v.findViewById(R.id.txtEmail);
-            vTitle = (TextView) v.findViewById(R.id.title);
+            vTitle = (TextView) v.findViewById(R.id.card_title);
+            vSubTitle = (TextView) v.findViewById(R.id.card_subtitle);
+            vTags = (TextView) v.findViewById(R.id.card_tag);
+            vContent = (TextView) v.findViewById(R.id.card_content);
         }
     }
 
@@ -40,20 +41,22 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
         return storyInfoList.size();
     }
 
+
     @Override
     public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {
-        ClassStoryInfo ci = storyInfoList.get(i);
-        storyViewHolder.vName.setText(ci.name);
-        storyViewHolder.vSurname.setText(ci.surname);
-        storyViewHolder.vEmail.setText(ci.email);
-        storyViewHolder.vTitle.setText(ci.name + " " + ci.surname);
+        ClassStoryInfo csi = storyInfoList.get(i);
+        storyViewHolder.vTitle.setText(csi.title);
+        storyViewHolder.vSubTitle.setText("From "+csi.originalPoster+" in "+csi.locationOfOrigin+" on "+ csi.timestamp);
+        storyViewHolder.vTags.setText(csi.tags[0]);
+        if (!csi.type.equals("tip")) {
+            storyViewHolder.vContent.setText(csi.content);
+        }
+        else{ storyViewHolder.vContent.setVisibility(View.GONE); }
     }
 
     @Override
-    public StoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.
-                from(viewGroup.getContext()).
-                inflate(R.layout.card_layout, viewGroup, false);
+    public StoryViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.shared_cardview_content, parent, false);
 
         return new StoryViewHolder(itemView);
     }

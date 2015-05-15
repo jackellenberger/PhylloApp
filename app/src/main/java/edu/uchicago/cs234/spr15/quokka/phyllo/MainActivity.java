@@ -14,11 +14,21 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
     //TODO: Implement Floating Action Button
+    //TODO: Implement hiding tab bar
+    //TODO: Implement clickable animation on right hamburger, cards
+    //TODO: when longform cards are clicked open in new fragment
+    //TODO: Comments????
+    //TODO: implement swiping cards
 
     //TOOLBAR / APPBAR
     private Toolbar toolbar;
@@ -240,15 +250,7 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         });
-
-        setContentView(R.layout.main_user_tab_content);
-        RecyclerView recList = (RecyclerView) findViewById(R.id.user_content_recycler);
-        recList.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recList.setLayoutManager(llm);
     }
-
 
     ///// HELPER FUNCTIONS FOR OPENING FRAGMENTS /////
     private void openFragment(final Fragment fragment) {

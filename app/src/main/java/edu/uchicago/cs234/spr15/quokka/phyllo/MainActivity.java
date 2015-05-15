@@ -128,7 +128,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        ///// RECYCLER / DRAWER CONTENTS /////
+        ///// RECYCLER FOR DRAWER CONTENTS /////
         // Assigning the RecyclerView Object to the xml View
         mLeftDrawerRecyclerView = (RecyclerView) findViewById(R.id.left_RecyclerView);
         // Letting the system know that the list objects are of fixed size (we won't change the number of tabs)
@@ -172,8 +172,10 @@ public class MainActivity extends ActionBarActivity {
                 }
                 return false;
             }
+
             @Override
-            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) { }
+            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+            }
         });
         mRightDrawerRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
@@ -188,8 +190,10 @@ public class MainActivity extends ActionBarActivity {
                 }
                 return false;
             }
+
             @Override
-            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) { }
+            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+            }
         });
 
 
@@ -224,20 +228,25 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        //make right Hamburger button clickable to open the right drawer
         View mRightDrawerToggle = findViewById(R.id.rightHamburger);
         mRightDrawerToggle.isClickable();
-        mRightDrawerToggle.setOnClickListener(new View.OnClickListener(){
+        mRightDrawerToggle.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
                     mDrawerLayout.closeDrawer(Gravity.RIGHT);
-                }
-                else {
+                } else {
                     mDrawerLayout.openDrawer(Gravity.RIGHT);
                 }
             }
         });
 
-
+        setContentView(R.layout.main_user_tab_content);
+        RecyclerView recList = (RecyclerView) findViewById(R.id.user_content_recycler);
+        recList.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
     }
 
 
@@ -310,7 +319,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    /*
+    /* REMOVE OPTIONS MENU
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

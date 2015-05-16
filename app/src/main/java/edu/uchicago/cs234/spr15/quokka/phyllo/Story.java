@@ -1,0 +1,89 @@
+package edu.uchicago.cs234.spr15.quokka.phyllo;
+
+import android.util.Log;
+
+import java.sql.Timestamp;
+
+/**
+ * Created by yangyangxinye on 5/14/15.
+ */
+public class Story {
+    private long id;
+    private String type; // tip, url OR longform
+    private String title;
+    private String content;
+    private long timestamp;
+    private String poster;
+    private long locationId;
+    private String tagList;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getPoster() {
+        return poster;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
+
+    public long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(long locationId) {
+        this.locationId = locationId;
+    }
+
+    public String getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(String tagList) {
+        this.tagList = tagList;
+    }
+
+    @Override
+    public String toString() {
+        Timestamp ts = new Timestamp(timestamp);
+        return title + " (" + ts.toString() + " )" + ": " + content; // TO TEST: ts.toString()
+    }
+}

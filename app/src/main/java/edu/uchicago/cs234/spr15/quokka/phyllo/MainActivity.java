@@ -1,6 +1,8 @@
 package edu.uchicago.cs234.spr15.quokka.phyllo;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -10,13 +12,22 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import java.sql.Timestamp;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+
 public class MainActivity extends ActionBarActivity {
+
+    // LOCAL DATABASE
+    private UserStoryDb userDb;
 
     //TODO: Implement Floating Action Button
 
@@ -58,8 +69,31 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        // LOCAL DATABASE
+        this.deleteDatabase("localUserQueue.db"); // To recreate the db each time
+        userDb = new UserStoryDb(this);
+        try {
+            userDb.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // THIS PUTS THREE DUMMY RECORDS IN THE DATABASE
+        // To create a story: createStory(String type, String title, String content, long timestamp,
+        //      String poster, String tags, long locationId)
+        Date date= new Date();
+        long time = date.getTime();
+        Timestamp ts = new Timestamp(time);
+        userDb.createStory("tip", "Hello World!", "", ts.getTime(), "", "", 0);
+        userDb.createStory("longform", "This is a title", "This is the body of a longform", ts.getTime(), "", "", 0);
+        userDb.createStory("url", "This is the title of a url", "www.google.com", ts.getTime(), "", "", 0);
+        List<Story> stories = userDb.getAllStories();
+        for (Story s : stories) {
+            Log.d("Story information:", s.toString());
+        }
 
         ///// TOOLBAR / APPBAR /////
         setTitle("Phyllo"); //Text displayed in App Bar

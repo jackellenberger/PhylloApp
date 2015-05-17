@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:fitsSystemWindows="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- SPACE FOR TRANSLUCENT STATUS BAR
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/primaryColor"/>
+    -->
+    <!-- APP BAR -->
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/shared_app_bar"
+        android:label="@string/app_name" />
+
+    <TextView
+        android:id="@+id/new_story_text"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="Create a new story here!"
+        android:textColor="@color/primaryColor"
+        android:background="@color/background_material_light"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        />
+
+</LinearLayout>

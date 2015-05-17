@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.melnykov.fab.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,9 @@ public class ContentUserTab extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(c);
         recyclerView.setLayoutManager(layoutManager);
 
+        final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.user_fab);
+        fab.attachToRecyclerView(recyclerView);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -40,7 +45,14 @@ public class ContentUserTab extends Fragment {
                 });
             }
         }).start();
-
+        fab.show();
+        fab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v){
+                android.support.v4.app.FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_top, R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
+                ft.replace(R.id.drawer_layout, new FragmentNewStory()).addToBackStack(null).commit();
+            }
+        });
         return view;
     }
     //TODO: fill generateUserData with functions that will query local db for stories

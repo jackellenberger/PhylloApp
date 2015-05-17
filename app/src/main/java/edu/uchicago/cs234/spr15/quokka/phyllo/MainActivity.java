@@ -1,8 +1,6 @@
 package edu.uchicago.cs234.spr15.quokka.phyllo;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -88,15 +86,15 @@ public class MainActivity extends ActionBarActivity {
         }
         // THIS PUTS THREE DUMMY RECORDS IN THE DATABASE
         // To create a story: createStory(String type, String title, String content, long timestamp,
-        //      String poster, String tags, long locationId)
+        //      String poster, String tagList, long locationId)
         Date date= new Date();
         long time = date.getTime();
         Timestamp ts = new Timestamp(time);
         userDb.createStory("tip", "Hello World!", "", ts.getTime(), "", "", 0);
         userDb.createStory("longform", "This is a title", "This is the body of a longform", ts.getTime(), "", "", 0);
         userDb.createStory("url", "This is the title of a url", "www.google.com", ts.getTime(), "", "", 0);
-        List<Story> stories = userDb.getAllStories();
-        for (Story s : stories) {
+        List<ClassStoryInfo> stories = userDb.getAllStories();
+        for (ClassStoryInfo s : stories) {
             Log.d("Story information:", s.toString());
         }
 

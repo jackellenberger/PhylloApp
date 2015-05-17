@@ -1,6 +1,5 @@
 package edu.uchicago.cs234.spr15.quokka.phyllo;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -18,7 +17,7 @@ public class UserDbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STORY_TIMESTAMP = "timestamp";
     public static final String COLUMN_STORY_POSTER = "poster"; // ORIGINAL POSTER
     public static final String COLUMN_STORY_LOCATION_ID = "locationid";
-    public static final String COLUMN_STORY_TAGS = "tags";
+    public static final String COLUMN_STORY_TAGS = "tagList";
 
     private static final String DATABASE_NAME = "localUserQueue.db";
     private static final int DATABASE_VERSION = 1;

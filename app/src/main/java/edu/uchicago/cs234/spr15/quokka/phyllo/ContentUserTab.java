@@ -47,34 +47,33 @@ public class ContentUserTab extends Fragment {
     private List<ClassStoryInfo> generateUserData(int size) {
 
         List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
+        java.util.Date date= new java.util.Date();
+        long currentTime = date.getTime();
         for (int i=1; i <= size; i++) {
             ClassStoryInfo csi = new ClassStoryInfo();
             if (i%3==0) {
-                csi.type="tip";
-                csi.title="This is tip number " + (i/3);
-                csi.content="You shouldn't be able to see this!!1!";
-                csi.timestamp="Now";
-                csi.originalPoster="Me";
-                csi.locationOfOrigin="here";
-                csi.tags = new String[]{"tweet"};
+                csi.setType("tip");
+                csi.setTitle("This is tip number " + (i/3));
+                csi.setContent("You shouldn't be able to see this!!1!");
+                csi.setTimestamp(currentTime);
+                csi.setOriginalPoster("The Quokka In The Sky");
+                csi.setTagList(new String[]{"tweet"});
             }
             else if ((i+1)%3==0) {
-                csi.type="link";
-                csi.title="This is link number " + (i/3);
-                csi.content="https://cs.uchicago.edu";
-                csi.timestamp="Now";
-                csi.originalPoster="Me";
-                csi.locationOfOrigin="here";
-                csi.tags = new String[]{"uchicago"};
+                csi.setType("link");
+                csi.setTitle("This is link number " + (i / 3));
+                csi.setContent("https://cs.uchicago.edu");
+                csi.setTimestamp(currentTime);
+                csi.setOriginalPoster("The Quokka In The Sky");
+                csi.setTagList(new String[]{"uchicago"});
             }
             else {
-                csi.type="longform";
-                csi.title="This is longform number " + (i/3);
-                csi.content= getString(R.string.filler_text);
-                csi.timestamp="Now";
-                csi.originalPoster="Me";
-                csi.locationOfOrigin="here";
-                csi.tags = new String[]{"Latin filler"};
+                csi.setType("longform");
+                csi.setTitle("This is longform number " + (i / 3));
+                csi.setContent(getString(R.string.filler_text));
+                csi.setTimestamp(currentTime);
+                csi.setOriginalPoster("The Quokka In The Sky");
+                csi.setTagList(new String[]{"Latin filler"});
             }
             result.add(csi);
         }

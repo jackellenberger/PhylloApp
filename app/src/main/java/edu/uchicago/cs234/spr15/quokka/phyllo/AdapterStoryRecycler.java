@@ -45,11 +45,11 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
     @Override
     public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {
         ClassStoryInfo csi = storyInfoList.get(i);
-        storyViewHolder.vTitle.setText(csi.title);
-        storyViewHolder.vSubTitle.setText("From "+csi.originalPoster+" in "+csi.locationOfOrigin+" on "+ csi.timestamp);
-        storyViewHolder.vTags.setText(csi.tags[0]);
-        if (!csi.type.equals("tip")) {
-            storyViewHolder.vContent.setText(csi.content);
+        storyViewHolder.vTitle.setText(csi.getTitle());
+        storyViewHolder.vSubTitle.setText("From "+csi.getOriginalPoster()+" on "+ csi.getTimestamp());
+        storyViewHolder.vTags.setText(csi.getTagList()[0]);
+        if (!csi.getType().equals("tip")) {
+            storyViewHolder.vContent.setText(csi.getContent());
         }
         else{ storyViewHolder.vContent.setVisibility(View.GONE); }
     }

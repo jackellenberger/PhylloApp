@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -52,18 +51,18 @@ public class UserStoryDb {
         //return newStory;
     }
 
-    public void deleteStory(Story story) {
-        long id = story.getId();
+    public void deleteStory(ClassStoryInfo story) {
+        long id = story.getStoryID();
         database.delete(UserDbHelper.TABLE_NAME, UserDbHelper.COLUMN_STORY_ID + " = " + id, null);
     }
 
-    public List<Story> getAllStories() {
-        List<Story> stories = new ArrayList<Story>();
+    public List<ClassStoryInfo> getAllStories() {
+        List<ClassStoryInfo> stories = new ArrayList<ClassStoryInfo>();
 
         Cursor cursor = database.query(UserDbHelper.TABLE_NAME, allColumns, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Story story = cursorToStory(cursor);
+            ClassStoryInfo story = cursorToStory(cursor);
             stories.add(story);
             cursor.moveToNext();
         }
@@ -71,8 +70,8 @@ public class UserStoryDb {
         return stories;
     }
 
-    public Story cursorToStory(Cursor cursor) {
-        Story story = new Story();
+    public ClassStoryInfo cursorToStory(Cursor cursor) {
+        ClassStoryInfo story = new ClassStoryInfo();
         story.setType(cursor.getString(0)); // ID is skipped
         story.setTitle(cursor.getString(1));
         story.setContent(cursor.getString(2));

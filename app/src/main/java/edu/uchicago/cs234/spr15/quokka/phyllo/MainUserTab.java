@@ -16,7 +16,7 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContentUserTab extends Fragment {
+public class MainUserTab extends Fragment {
 
     private DrawerLayout mDrawerLayout;
     @Override

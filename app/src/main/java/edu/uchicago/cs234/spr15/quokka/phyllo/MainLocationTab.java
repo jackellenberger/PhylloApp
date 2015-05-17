@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContentLocationTab extends Fragment {
+public class MainLocationTab extends Fragment {
 
     private View myView;
     private DrawerLayout mDrawerLayout;

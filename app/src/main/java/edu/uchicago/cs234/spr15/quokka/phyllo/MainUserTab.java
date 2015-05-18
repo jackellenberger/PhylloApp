@@ -13,12 +13,13 @@ import android.view.ViewGroup;
 
 import com.melnykov.fab.FloatingActionButton;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 public class MainUserTab extends Fragment {
 
     private DrawerLayout mDrawerLayout;
+    private UserStoryDb userDb;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //View myView = inflater.inflate(R.layout.main_user_tab_content,container,false);
@@ -33,10 +34,17 @@ public class MainUserTab extends Fragment {
         final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.user_fab);
         fab.attachToRecyclerView(recyclerView);
 
+        userDb = new UserStoryDb(this.getActivity());
+        try {
+            userDb.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final AdapterStoryRecycler adapter = new AdapterStoryRecycler(generateUserData(10));
+                final AdapterStoryRecycler adapter = new AdapterStoryRecycler(generateUserData());
                 c.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -56,39 +64,39 @@ public class MainUserTab extends Fragment {
         return view;
     }
     //TODO: fill generateUserData with functions that will query local db for stories
-    private List<ClassStoryInfo> generateUserData(int size) {
+    private List<ClassStoryInfo> generateUserData() {
 
-        List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
-        java.util.Date date= new java.util.Date();
-        long currentTime = date.getTime();
-        for (int i=1; i <= size; i++) {
-            ClassStoryInfo csi = new ClassStoryInfo();
-            if (i%3==0) {
-                csi.setType("tip");
-                csi.setTitle("This is tip number " + (i/3));
-                csi.setContent("You shouldn't be able to see this!!1!");
-                csi.setTimestamp(currentTime);
-                csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"tweet"});
-            }
-            else if ((i+1)%3==0) {
-                csi.setType("link");
-                csi.setTitle("This is link number " + (i / 3));
-                csi.setContent("https://cs.uchicago.edu");
-                csi.setTimestamp(currentTime);
-                csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"uchicago"});
-            }
-            else {
-                csi.setType("longform");
-                csi.setTitle("This is longform number " + (i / 3));
-                csi.setContent(getString(R.string.filler_text));
-                csi.setTimestamp(currentTime);
-                csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"Latin filler"});
-            }
-            result.add(csi);
-        }
-        return result;
+//        List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
+//        java.util.Date date= new java.util.Date();
+//        long currentTime = date.getTime();
+//        for (int i=1; i <= size; i++) {
+//            ClassStoryInfo csi = new ClassStoryInfo();
+//            if (i%3==0) {
+//                csi.setType("tip");
+//                csi.setTitle("This is tip number " + (i/3));
+//                csi.setContent("You shouldn't be able to see this!!1!");
+//                csi.setTimestamp(currentTime);
+//                csi.setOriginalPoster("The Quokka In The Sky");
+//                csi.setTagList(new String[]{"tweet"});
+//            }
+//            else if ((i+1)%3==0) {
+//                csi.setType("link");
+//                csi.setTitle("This is link number " + (i / 3));
+//                csi.setContent("https://cs.uchicago.edu");
+//                csi.setTimestamp(currentTime);
+//                csi.setOriginalPoster("The Quokka In The Sky");
+//                csi.setTagList(new String[]{"uchicago"});
+//            }
+//            else {
+//                csi.setType("longform");
+//                csi.setTitle("This is longform number " + (i / 3));
+//                csi.setContent(getString(R.string.filler_text));
+//                csi.setTimestamp(currentTime);
+//                csi.setOriginalPoster("The Quokka In The Sky");
+//                csi.setTagList(new String[]{"Latin filler"});
+//            }
+//            result.add(csi);
+//        }
+        return userDb.getAllStories();
     }
 }

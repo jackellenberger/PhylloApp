@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class UserDbHelper extends SQLiteOpenHelper {
 
+    //private static UserDbHelper dbHelper; // Singleton handler
+
     public static final String TABLE_NAME = "localUserQueue";
     public static final String COLUMN_STORY_ID = "_id";
     public static final String COLUMN_STORY_TYPE = "type";
@@ -36,11 +38,18 @@ public class UserDbHelper extends SQLiteOpenHelper {
                     COLUMN_STORY_POSTER + TEXT_TYPE + COMMA_SEP +
                     COLUMN_STORY_LOCATION_ID + INT_TYPE + COMMA_SEP +
                     COLUMN_STORY_TAGS + TEXT_TYPE +
-            " )";
+                    " )";
 
     public UserDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
+//    public static UserDbHelper getDbHelper(Context context) {
+//        if (dbHelper == null) {
+//            dbHelper = new UserDbHelper(context);
+//        }
+//        return dbHelper;
+//    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {

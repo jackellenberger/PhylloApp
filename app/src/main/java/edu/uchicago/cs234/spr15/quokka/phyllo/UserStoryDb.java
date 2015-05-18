@@ -20,7 +20,7 @@ public class UserStoryDb {
     private String[] allColumns = { UserDbHelper.COLUMN_STORY_TYPE,
             UserDbHelper.COLUMN_STORY_TITLE,
             UserDbHelper.COLUMN_STORY_CONTENT, UserDbHelper.COLUMN_STORY_TIMESTAMP,
-            UserDbHelper.COLUMN_STORY_POSTER, UserDbHelper.COLUMN_STORY_TAGS, UserDbHelper.COLUMN_STORY_LOCATION_ID };
+            UserDbHelper.COLUMN_STORY_POSTER, UserDbHelper.COLUMN_STORY_LOCATION_ID, UserDbHelper.COLUMN_STORY_TAGS, };
 
     public UserStoryDb(Context context) {
         dbHelper = new UserDbHelper(context);
@@ -35,15 +35,15 @@ public class UserStoryDb {
     }
 
     public void createStory(String type, String title, String content,
-                             long timestamp, String poster, String tags, long locationId) {
+                            long timestamp, String poster, long locationId, String[] tags) {
         ContentValues values = new ContentValues();
         values.put(UserDbHelper.COLUMN_STORY_TYPE, type);
         values.put(UserDbHelper.COLUMN_STORY_TITLE, title);
         values.put(UserDbHelper.COLUMN_STORY_CONTENT, content);
         values.put(UserDbHelper.COLUMN_STORY_TIMESTAMP, timestamp);
         values.put(UserDbHelper.COLUMN_STORY_POSTER, poster);
-        values.put(UserDbHelper.COLUMN_STORY_TAGS, tags);
         values.put(UserDbHelper.COLUMN_STORY_LOCATION_ID, locationId);
+        values.put(UserDbHelper.COLUMN_STORY_TAGS, convertArrayToString(tags));
         long insertId = database.insert(UserDbHelper.TABLE_NAME, null, values);
         Cursor cursor = database.query(UserDbHelper.TABLE_NAME, allColumns, UserDbHelper.COLUMN_STORY_ID + " = " + insertId, null, null, null, null);
         //Story newStory = cursorToStory(cursor);
@@ -76,6 +76,28 @@ public class UserStoryDb {
         story.setTitle(cursor.getString(1));
         story.setContent(cursor.getString(2));
         story.setTimestamp(cursor.getLong(3));
+        story.setOriginalPoster(cursor.getString(4));
+        story.setLocationId(cursor.getLong(5));
+        String tags = cursor.getString(6);
+        story.setTagList(convertStringToArray(tags));
         return story;
+    }
+
+    // Utility functions for converting tag arrays to a String
+    public static String strSeparator = "__,__";
+    public static String convertArrayToString(String[] array){
+        String str = "";
+        for (int i = 0; i < array.length; i++) {
+            str = str + array[i];
+            // Do not append comma at the end of last element
+            if(i < array.length - 1){
+                str = str + strSeparator;
+            }
+        }
+        return str;
+    }
+    public static String[] convertStringToArray(String str){
+        String[] arr = str.split(strSeparator);
+        return arr;
     }
 }

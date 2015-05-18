@@ -1,6 +1,7 @@
 package edu.uchicago.cs234.spr15.quokka.phyllo;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 /**
  * Created by jellenberger on 5/14/15.
@@ -82,6 +83,6 @@ public class ClassStoryInfo {
     @Override
     public String toString() {
         Timestamp ts = new Timestamp(timestamp);
-        return title + " (" + ts.toString() + " )" + ": " + content; // TO TEST: ts.toString()
+        return Arrays.toString(tagList) + ", " + locationId + ", " + title + " (" + ts.toString() + " )" + ": " + content;
     }
 }

@@ -64,7 +64,7 @@ public class MainUserTab extends Fragment {
         return view;
     }
     //TODO: fill generateUserData with functions that will query local db for stories
-    private List<ClassStoryInfo> generateUserData() {
+    public List<ClassStoryInfo> generateUserData() {
 
 //        List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
 //        java.util.Date date= new java.util.Date();

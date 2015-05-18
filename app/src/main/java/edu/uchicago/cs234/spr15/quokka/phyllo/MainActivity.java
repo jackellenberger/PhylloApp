@@ -24,9 +24,6 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
-    // LOCAL DATABASE
-    private UserStoryDb userDb;
-
     //TODO: Implement Floating Action Button
     //TODO: Implement hiding tab bar
     //TODO: Implement clickable animation on right hamburger, cards
@@ -70,6 +67,9 @@ public class MainActivity extends ActionBarActivity {
     String RIGHT_TITLES[] = {"Statistics","Best Of","Most Viral","Edit Location","Nearby Locations"};
     int RIGHT_ICONS[] = {R.mipmap.ic_assessment_grey600_48dp,R.mipmap.ic_grade_grey600_48dp,R.mipmap.ic_bug_report_grey600_48dp,R.mipmap.ic_rate_review_grey600_48dp,R.mipmap.ic_pin_drop_grey600_48dp};
 
+    // LOCAL DATABASE
+    private UserStoryDb userDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.main_activity);
 
         // LOCAL DATABASE
-        this.deleteDatabase("localUserQueue.db"); // To recreate the db each time
+        this.deleteDatabase("localUserQueue.db"); // To recreate the db each time for now
         userDb = new UserStoryDb(this);
         try {
             userDb.open();
@@ -90,9 +90,9 @@ public class MainActivity extends ActionBarActivity {
         Date date= new Date();
         long time = date.getTime();
         Timestamp ts = new Timestamp(time);
-        userDb.createStory("tip", "Hello World!", "", ts.getTime(), "", "", 0);
-        userDb.createStory("longform", "This is a title", "This is the body of a longform", ts.getTime(), "", "", 0);
-        userDb.createStory("url", "This is the title of a url", "www.google.com", ts.getTime(), "", "", 0);
+        userDb.createStory("tip", "This is tip number 1", "", ts.getTime(), "The Quokka in the Sky", 1, new String[]{"tweet"});
+        userDb.createStory("longform", "This is longform number 1", getString(R.string.filler_text), ts.getTime(), "The Quokka in the Sky", 2, new String[]{"Latin filler"});
+        userDb.createStory("url", "This is link number 1", "https://cs.uchicago.edu", ts.getTime(), "The Quokka in the Sky", 3, new String[]{"uchicago"});
         List<ClassStoryInfo> stories = userDb.getAllStories();
         for (ClassStoryInfo s : stories) {
             Log.d("Story information:", s.toString());

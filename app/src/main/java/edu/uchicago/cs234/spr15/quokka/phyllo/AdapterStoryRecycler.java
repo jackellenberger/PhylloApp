@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -46,7 +47,8 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
     public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {
         ClassStoryInfo csi = storyInfoList.get(i);
         storyViewHolder.vTitle.setText(csi.getTitle());
-        storyViewHolder.vSubTitle.setText("From "+csi.getOriginalPoster()+" on "+ csi.getTimestamp());
+        Timestamp ts = new Timestamp(csi.getTimestamp());
+        storyViewHolder.vSubTitle.setText("From "+csi.getOriginalPoster()+" on "+ ts.toString().split("\\.")[0]);
         storyViewHolder.vTags.setText(csi.getTagList()[0]);
         if (!csi.getType().equals("tip")) {
             storyViewHolder.vContent.setText(csi.getContent());

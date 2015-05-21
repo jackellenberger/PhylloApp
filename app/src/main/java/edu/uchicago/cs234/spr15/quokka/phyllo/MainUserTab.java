@@ -16,6 +16,10 @@ import com.melnykov.fab.FloatingActionButton;
 import java.sql.SQLException;
 import java.util.List;
 
+//TODO: make longforms clickable so that they expand into their full form. normally only display ~20 lines
+//TODO: make links hyperlinks
+//TODO: capture share from external
+
 public class MainUserTab extends Fragment {
 
     private DrawerLayout mDrawerLayout;

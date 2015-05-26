@@ -42,6 +42,9 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
         return storyInfoList.size();
     }
 
+    public ClassStoryInfo getItem(int position){
+        return storyInfoList.get(position);
+    }
 
     @Override
     public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {

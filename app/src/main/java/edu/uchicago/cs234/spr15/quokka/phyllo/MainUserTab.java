@@ -7,10 +7,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.sql.SQLException;
@@ -30,14 +33,17 @@ public class MainUserTab extends Fragment {
         //return myView;
 
         final View view = inflater.inflate(R.layout.main_user_tab_content, container, false);
-        final FragmentActivity c = getActivity();
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.user_content_recycler);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(c);
-        recyclerView.setLayoutManager(layoutManager);
+        final FragmentActivity mFragmentActivity = getActivity();
+        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.user_content_recycler);
+        View mRelativeLayout = (View) view.findViewById(R.id.user_content_relative_layout);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(mFragmentActivity);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
+        // Initialize FAB
         final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.user_fab);
-        fab.attachToRecyclerView(recyclerView);
+        fab.attachToRecyclerView(mRecyclerView);
 
+        // Initialize local db connection
         userDb = new UserStoryDb(this.getActivity());
         try {
             userDb.open();
@@ -45,18 +51,68 @@ public class MainUserTab extends Fragment {
             e.printStackTrace();
         }
 
-        new Thread(new Runnable() {
+        final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(generateUserData());
+        mRecyclerView.setAdapter(mAdapter);
+
+
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            private float x1, x2, x2temp;
+            static final int MIN_DISTANCE = 150;
+
             @Override
-            public void run() {
-                final AdapterStoryRecycler adapter = new AdapterStoryRecycler(generateUserData());
-                c.runOnUiThread(new Runnable() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        x1 = event.getX();
+                        if (x1 > 73) {
+                            //leave room for drawer to be pulled
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                        } break;
+                    case MotionEvent.ACTION_MOVE:
+                        x2temp = event.getX();
+                        if (x2temp < x1) {
+                            //if you sliding left, allow for intercept to be handled by slidingTabLayout
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                        } break;
+                }
+                return false;
+            }
+        });
+
+        SwipeableRecyclerViewTouchListener swipeTouchListener =
+            new SwipeableRecyclerViewTouchListener(mRecyclerView,
+                new SwipeableRecyclerViewTouchListener.SwipeListener() {
                     @Override
-                    public void run() {
-                        recyclerView.setAdapter(adapter);
+                    public boolean canSwipe(int position) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                        Log.w("swipeRecyclerView","Left");
+                        return;
+                    }
+
+                    @Override
+                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                        Log.w("swipeRecyclerView", "Right");
+                        AdapterStoryRecycler updatedAdapter = (AdapterStoryRecycler) recyclerView.getAdapter();
+                        for (int position : reverseSortedPositions) {
+                            Log.w("SwipeableRecyclerViewTouchListener " + String.valueOf(position), String.valueOf(position));
+                            ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
+                            //TODO: POST STORY FUNCTION
+                            userDb.deleteStory(swipedStory); //TODO: WHY ISN'T IT DELETING
+                            //TODO: Give option to not delete
+                            updatedAdapter.notifyItemRemoved(position);
+                        }
+                        updatedAdapter.notifyDataSetChanged();
                     }
                 });
-            }
-        }).start();
+        mRecyclerView.addOnItemTouchListener(swipeTouchListener);
+
+
+
+        // FAB: open FragmentNewStory when pressed
         fab.show();
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
@@ -103,4 +159,5 @@ public class MainUserTab extends Fragment {
 //        }
         return userDb.getAllStories();
     }
+
 }

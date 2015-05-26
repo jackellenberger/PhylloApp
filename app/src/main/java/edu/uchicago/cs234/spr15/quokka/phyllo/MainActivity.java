@@ -17,8 +17,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import java.sql.Timestamp;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -69,6 +69,9 @@ public class MainActivity extends ActionBarActivity {
 
     // LOCAL DATABASE
     private UserStoryDb userDb;
+
+    //SWIPABLE CARDS
+    private RecyclerView mUserRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +138,6 @@ public class MainActivity extends ActionBarActivity {
                 }
                 //When in Location Tab...
                 else if (position == 1) {
-                    //setScrimColor transparent = stops background from darkening
-                    //mDrawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
-                    //mDrawerToggle.setDrawerIndicatorEnabled(false); //TODO: Animate left hamburger hiding, add hamburger menu to the right
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.right_drawer));
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.left_drawer));
                 }
@@ -211,8 +211,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
             @Override
-            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-            }
+            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) { }
         });
         mRightDrawerRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
@@ -229,8 +228,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
             @Override
-            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-            }
+            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) { }
         });
 
 

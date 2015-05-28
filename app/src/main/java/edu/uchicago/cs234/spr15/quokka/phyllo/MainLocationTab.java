@@ -7,9 +7,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,23 +26,64 @@ public class MainLocationTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.main_location_tab_content, container, false);
-        final FragmentActivity c = getActivity();
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.location_content_recycler);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(c);
-        recyclerView.setLayoutManager(layoutManager);
+        final FragmentActivity mFragmentActivity = getActivity();
+        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.location_content_recycler);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(mFragmentActivity);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        new Thread(new Runnable() {
+        final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(generateLocalData(10));
+        mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            private float x1, x2temp;
+
             @Override
-            public void run() {
-                final AdapterStoryRecycler adapter = new AdapterStoryRecycler(generateLocalData(10));
-                c.runOnUiThread(new Runnable() {
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        x1 = event.getX();
+                        if (x1 < v.getWidth() - 73) {
+                            //leave room for drawer to be pulled
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                        }
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        x2temp = event.getX();
+                        if (x2temp > x1) {
+                            //if you sliding right, allow for intercept to be handled by slidingTabLayout
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+        SwipeableRecyclerViewTouchListener swipeTouchListener =
+            new SwipeableRecyclerViewTouchListener(mRecyclerView,
+                new SwipeableRecyclerViewTouchListener.SwipeListener() {
                     @Override
-                    public void run() {
-                        recyclerView.setAdapter(adapter);
+                    public boolean canSwipe(int position) {
+                                return true;
+                            }
+                    @Override
+                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                        Log.w("swipeRecyclerView", "Left");
+                        AdapterStoryRecycler updatedAdapter = (AdapterStoryRecycler) recyclerView.getAdapter();
+                        for (int position : reverseSortedPositions) {
+                            Log.w("SwipeableRecyclerViewTouchListener " + String.valueOf(position), String.valueOf(position));
+                            ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
+                            updatedAdapter.notifyItemRemoved(position);
+                        }
+                        updatedAdapter.notifyDataSetChanged();
+                        return;
+                    }
+                    @Override
+                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                        Log.w("swipeRecyclerView", "Right");
                     }
                 });
-            }
-        }).start();
+        mRecyclerView.addOnItemTouchListener(swipeTouchListener);
 
         return view;
 

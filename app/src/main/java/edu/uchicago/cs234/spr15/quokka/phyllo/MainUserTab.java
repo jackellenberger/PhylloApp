@@ -17,7 +17,6 @@ import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListen
 import com.melnykov.fab.FloatingActionButton;
 
 import java.sql.SQLException;
-import java.util.List;
 
 //TODO: make longforms clickable so that they expand into their full form. normally only display ~20 lines
 //TODO: make links hyperlinks
@@ -29,10 +28,8 @@ public class MainUserTab extends Fragment {
     private UserStoryDb userDb;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //View myView = inflater.inflate(R.layout.main_user_tab_content,container,false);
-        //return myView;
-
         final View view = inflater.inflate(R.layout.main_user_tab_content, container, false);
+
         final FragmentActivity mFragmentActivity = getActivity();
         final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.user_content_recycler);
         View mRelativeLayout = (View) view.findViewById(R.id.user_content_relative_layout);
@@ -51,13 +48,12 @@ public class MainUserTab extends Fragment {
             e.printStackTrace();
         }
 
-        final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(generateUserData());
+        final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(userDb.getAllStories());
         mRecyclerView.setAdapter(mAdapter);
 
 
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
-            private float x1, x2, x2temp;
-            static final int MIN_DISTANCE = 150;
+            private float x1, x2temp;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -122,42 +118,6 @@ public class MainUserTab extends Fragment {
             }
         });
         return view;
-    }
-    //TODO: fill generateUserData with functions that will query local db for stories
-    public List<ClassStoryInfo> generateUserData() {
-
-//        List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
-//        java.util.Date date= new java.util.Date();
-//        long currentTime = date.getTime();
-//        for (int i=1; i <= size; i++) {
-//            ClassStoryInfo csi = new ClassStoryInfo();
-//            if (i%3==0) {
-//                csi.setType("tip");
-//                csi.setTitle("This is tip number " + (i/3));
-//                csi.setContent("You shouldn't be able to see this!!1!");
-//                csi.setTimestamp(currentTime);
-//                csi.setOriginalPoster("The Quokka In The Sky");
-//                csi.setTagList(new String[]{"tweet"});
-//            }
-//            else if ((i+1)%3==0) {
-//                csi.setType("link");
-//                csi.setTitle("This is link number " + (i / 3));
-//                csi.setContent("https://cs.uchicago.edu");
-//                csi.setTimestamp(currentTime);
-//                csi.setOriginalPoster("The Quokka In The Sky");
-//                csi.setTagList(new String[]{"uchicago"});
-//            }
-//            else {
-//                csi.setType("longform");
-//                csi.setTitle("This is longform number " + (i / 3));
-//                csi.setContent(getString(R.string.filler_text));
-//                csi.setTimestamp(currentTime);
-//                csi.setOriginalPoster("The Quokka In The Sky");
-//                csi.setTagList(new String[]{"Latin filler"});
-//            }
-//            result.add(csi);
-//        }
-        return userDb.getAllStories();
     }
 
 }

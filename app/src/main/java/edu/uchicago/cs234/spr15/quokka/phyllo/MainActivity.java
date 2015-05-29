@@ -93,9 +93,9 @@ public class MainActivity extends ActionBarActivity {
         Date date= new Date();
         long time = date.getTime();
         Timestamp ts = new Timestamp(time);
-        userDb.createStory("tip", "This is tip number 1", "", ts.getTime(), "The Quokka in the Sky", 1, new String[]{"tweet"});
-        userDb.createStory("longform", "This is longform number 1", getString(R.string.filler_text), ts.getTime(), "The Quokka in the Sky", 2, new String[]{"Latin filler"});
-        userDb.createStory("url", "This is link number 1", "https://cs.uchicago.edu", ts.getTime(), "The Quokka in the Sky", 3, new String[]{"uchicago"});
+        userDb.createStory("tip", "This is tip number 1", "", ts.getTime(), "The Quokka in the Sky", 1, new String[]{"tweet","tip","brand new","it works"});
+        userDb.createStory("longform", "This is longform number 1", getString(R.string.filler_text), ts.getTime(), "The Quokka in the Sky", 2, new String[]{"Latin filler","readme.txt","blogosphere"});
+        userDb.createStory("url", "This is link number 1", "https://cs.uchicago.edu", ts.getTime(), "The Quokka in the Sky", 3, new String[]{"uchicago","cs","sup","a long tag that will hopefully force a line break","2 many tags 2 handle","help, drowning in tags over here"});
         List<ClassStoryInfo> stories = userDb.getAllStories();
         for (ClassStoryInfo s : stories) {
             Log.d("Story information:", s.toString());

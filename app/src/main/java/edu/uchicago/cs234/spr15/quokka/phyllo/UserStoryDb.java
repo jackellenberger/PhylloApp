@@ -17,7 +17,7 @@ public class UserStoryDb {
     // Database fields
     private SQLiteDatabase database;
     private UserDbHelper dbHelper;
-    private String[] allColumns = { UserDbHelper.COLUMN_STORY_TYPE,
+    private String[] allColumns = { UserDbHelper.COLUMN_STORY_ID, UserDbHelper.COLUMN_STORY_TYPE,
             UserDbHelper.COLUMN_STORY_TITLE,
             UserDbHelper.COLUMN_STORY_CONTENT, UserDbHelper.COLUMN_STORY_TIMESTAMP,
             UserDbHelper.COLUMN_STORY_POSTER, UserDbHelper.COLUMN_STORY_LOCATION_ID, UserDbHelper.COLUMN_STORY_TAGS, };
@@ -72,13 +72,14 @@ public class UserStoryDb {
 
     public ClassStoryInfo cursorToStory(Cursor cursor) {
         ClassStoryInfo story = new ClassStoryInfo();
-        story.setType(cursor.getString(0)); // ID is skipped
-        story.setTitle(cursor.getString(1));
-        story.setContent(cursor.getString(2));
-        story.setTimestamp(cursor.getLong(3));
-        story.setOriginalPoster(cursor.getString(4));
-        story.setLocationId(cursor.getLong(5));
-        String tags = cursor.getString(6);
+        story.setStoryID(cursor.getLong(0));
+        story.setType(cursor.getString(1));
+        story.setTitle(cursor.getString(2));
+        story.setContent(cursor.getString(3));
+        story.setTimestamp(cursor.getLong(4));
+        story.setOriginalPoster(cursor.getString(5));
+        story.setLocationId(cursor.getLong(6));
+        String tags = cursor.getString(7);
         story.setTagList(convertStringToArray(tags));
         return story;
     }

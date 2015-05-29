@@ -55,11 +55,11 @@ public class UserStoryDb {
 
     public void deleteStory(ClassStoryInfo story) {
         long id = story.getStoryID();
-        long timestamp = story.getTimestamp();
-        String poster = story.getOriginalPoster();
-        Log.w("deleting timestamp ", String.valueOf(timestamp));
-        //database.delete(UserDbHelper.TABLE_NAME, UserDbHelper.COLUMN_STORY_ID + " = " + id, null);
-        database.delete(UserDbHelper.TABLE_NAME,UserDbHelper.COLUMN_STORY_TIMESTAMP + " = " + timestamp, null);
+//        long timestamp = story.getTimestamp();
+//        String poster = story.getOriginalPoster();
+//        Log.w("deleting timestamp ", String.valueOf(timestamp));
+        database.delete(UserDbHelper.TABLE_NAME, UserDbHelper.COLUMN_STORY_ID + " = " + id, null);
+        //database.delete(UserDbHelper.TABLE_NAME,UserDbHelper.COLUMN_STORY_TIMESTAMP + " = " + timestamp, null);
     }
 
     public List<ClassStoryInfo> getAllStories() {

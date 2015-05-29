@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,11 +41,12 @@ public class UserStoryDb {
         values.put(UserDbHelper.COLUMN_STORY_TYPE, type);
         values.put(UserDbHelper.COLUMN_STORY_TITLE, title);
         values.put(UserDbHelper.COLUMN_STORY_CONTENT, content);
-        values.put(UserDbHelper.COLUMN_STORY_TIMESTAMP, timestamp);
+        values.put(UserDbHelper.COLUMN_STORY_TIMESTAMP, System.currentTimeMillis());
         values.put(UserDbHelper.COLUMN_STORY_POSTER, poster);
         values.put(UserDbHelper.COLUMN_STORY_LOCATION_ID, locationId);
         values.put(UserDbHelper.COLUMN_STORY_TAGS, convertArrayToString(tags));
         long insertId = database.insert(UserDbHelper.TABLE_NAME, null, values);
+        Log.w("inserting timestamp ", String.valueOf(timestamp));
         Cursor cursor = database.query(UserDbHelper.TABLE_NAME, allColumns, UserDbHelper.COLUMN_STORY_ID + " = " + insertId, null, null, null, null);
         //Story newStory = cursorToStory(cursor);
         cursor.close();
@@ -53,7 +55,11 @@ public class UserStoryDb {
 
     public void deleteStory(ClassStoryInfo story) {
         long id = story.getStoryID();
-        database.delete(UserDbHelper.TABLE_NAME, UserDbHelper.COLUMN_STORY_ID + " = " + id, null);
+        long timestamp = story.getTimestamp();
+        String poster = story.getOriginalPoster();
+        Log.w("deleting timestamp ", String.valueOf(timestamp));
+        //database.delete(UserDbHelper.TABLE_NAME, UserDbHelper.COLUMN_STORY_ID + " = " + id, null);
+        database.delete(UserDbHelper.TABLE_NAME,UserDbHelper.COLUMN_STORY_TIMESTAMP + " = " + timestamp, null);
     }
 
     public List<ClassStoryInfo> getAllStories() {

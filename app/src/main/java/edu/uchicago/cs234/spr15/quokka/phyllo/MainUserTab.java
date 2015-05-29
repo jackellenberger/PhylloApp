@@ -101,6 +101,8 @@ public class MainUserTab extends Fragment {
                             //TODO: Give option to not delete
                             updatedAdapter.notifyItemRemoved(position);
                         }
+                        updatedAdapter = new AdapterStoryRecycler(userDb.getAllStories());
+                        recyclerView.setAdapter(updatedAdapter);
                         updatedAdapter.notifyDataSetChanged();
                     }
                 });

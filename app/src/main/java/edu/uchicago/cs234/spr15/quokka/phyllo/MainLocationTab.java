@@ -31,7 +31,7 @@ public class MainLocationTab extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(mFragmentActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(generateLocalData(10));
+        final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(generateLocalData(3));
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
@@ -73,9 +73,9 @@ public class MainLocationTab extends Fragment {
                         for (int position : reverseSortedPositions) {
                             Log.w("SwipeableRecyclerViewTouchListener " + String.valueOf(position), String.valueOf(position));
                             ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
-                            updatedAdapter.notifyItemRemoved(position);
+                            //updatedAdapter.notifyItemRemoved(position);
                         }
-                        updatedAdapter.notifyDataSetChanged();
+                        //updatedAdapter.notifyDataSetChanged();
                         return;
                     }
                     @Override
@@ -97,21 +97,21 @@ public class MainLocationTab extends Fragment {
         long currentTime = date.getTime();
         for (int i=1; i <= size; i++) {
             ClassStoryInfo csi = new ClassStoryInfo();
-            if ((i + 1) % 3 == 0) {
+            if (i % 3 == 0) {
                 csi.setType("tip");
                 csi.setTitle("This is tip number " + (i/3));
                 csi.setContent("You shouldn't be able to see this!!1!");
                 csi.setTimestamp(currentTime);
                 csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"tweet"});
+                csi.setTagList(new String[]{"tweet","tweet","imma bird"});
             }
-            else if (i%3 == 0) {
+            else if (i % 3 == 1) {
                 csi.setType("longform");
                 csi.setTitle("This is longform number " + (i / 3));
                 csi.setContent(getString(R.string.filler_text));
                 csi.setTimestamp(currentTime);
                 csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"Latin filler"});
+                csi.setTagList(new String[]{"Latin filler","blag","quokka"});
             }
             else{
                 csi.setType("link");
@@ -119,7 +119,7 @@ public class MainLocationTab extends Fragment {
                 csi.setContent("https://cs.uchicago.edu");
                 csi.setTimestamp(currentTime);
                 csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"uchicago"});
+                csi.setTagList(new String[]{"uchicago","cs","edu","educate yo self"});
             }
             result.add(csi);
         }

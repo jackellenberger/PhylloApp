@@ -3,6 +3,7 @@ package edu.uchicago.cs234.spr15.quokka.phyllo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,10 +88,15 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
             tagNum += 1;
             storyViewHolder.vTags.addView(newView);
         }
-        if (!csi.getType().equals("tip")) {
-            storyViewHolder.vContent.setText(csi.getContent());
+        //remove content view from tips
+        if (!csi.getType().equals("tip")) { storyViewHolder.vContent.setText(csi.getContent()); }
+        else { storyViewHolder.vContent.setVisibility(View.GONE);}
+
+        //hyperlink links
+        if(csi.getType().equals("link") || csi.getType().equals("url")){
+            storyViewHolder.vContent.setAutoLinkMask(1);
+            storyViewHolder.vContent.setMovementMethod(LinkMovementMethod.getInstance());
         }
-        else{ storyViewHolder.vContent.setVisibility(View.GONE); }
     }
 
     @Override

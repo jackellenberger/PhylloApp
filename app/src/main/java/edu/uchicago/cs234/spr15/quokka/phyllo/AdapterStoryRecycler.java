@@ -60,18 +60,10 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
         storyViewHolder.vTitle.setText(csi.getTitle());
         Timestamp ts = new Timestamp(csi.getTimestamp());
         storyViewHolder.vSubTitle.setText("From "+csi.getOriginalPoster()+" on "+ ts.toString().split("\\.")[0]);
-        //storyViewHolder.vTags.setText(csi.getTagList()[0]);
+
         String[] tags = csi.getTagList();
         int tagNum = 0;
-        /*android:id="@+id/card_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:layout_marginEnd="8dp"
-        android:textAllCaps="true"
-        android:text="Add a Tag!"
-        android:background="@color/background_material_light"
-        style="?android:attr/textAppearanceButton"*/
+        //dp to px conversion
         Resources r = viewContext.getContext().getResources();
         int px2 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, r.getDisplayMetrics());
         int px4 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, r.getDisplayMetrics());
@@ -83,7 +75,7 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(0, px2, px8, px2);
+            params.setMargins(0, px2, px4, px2);
             newView.setLayoutParams(params);
             newView.setId(tagNum);
             newView.setPadding(px4,px2,px4,px2);

@@ -36,10 +36,6 @@ public class MainUserTab extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(mFragmentActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // Initialize FAB
-        final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.user_fab);
-        fab.attachToRecyclerView(mRecyclerView);
-
         // Initialize local db connection
         userDb = new UserStoryDb(this.getActivity());
         try {
@@ -63,13 +59,15 @@ public class MainUserTab extends Fragment {
                         if (x1 > 73) {
                             //leave room for drawer to be pulled
                             v.getParent().requestDisallowInterceptTouchEvent(true);
-                        } break;
+                        }
+                        break;
                     case MotionEvent.ACTION_MOVE:
                         x2temp = event.getX();
                         if (x2temp < x1) {
                             //if you sliding left, allow for intercept to be handled by slidingTabLayout
                             v.getParent().requestDisallowInterceptTouchEvent(false);
-                        } break;
+                        }
+                        break;
                 }
                 return false;
             }
@@ -97,8 +95,8 @@ public class MainUserTab extends Fragment {
                             Log.w("SwipeableRecyclerViewTouchListener " + String.valueOf(position), String.valueOf(position));
                             ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
                             //TODO: POST STORY FUNCTION
-                            userDb.deleteStory(swipedStory); //TODO: WHY ISN'T IT DELETING
-                            //TODO: Give option to not delete
+                            userDb.deleteStory(swipedStory);
+                            //TODO: Give option to not delete?
                             updatedAdapter.notifyItemRemoved(position);
                         }
                         updatedAdapter = new AdapterStoryRecycler(userDb.getAllStories());
@@ -109,7 +107,9 @@ public class MainUserTab extends Fragment {
         mRecyclerView.addOnItemTouchListener(swipeTouchListener);
 
 
-
+        // Initialize FAB
+        final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.user_fab);
+        fab.attachToRecyclerView(mRecyclerView);
         // FAB: open FragmentNewStory when pressed
         fab.show();
         fab.setOnClickListener(new View.OnClickListener() {

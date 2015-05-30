@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/location_content_recycler"
-        android:paddingBottom="8dp"
+        android:paddingBottom="0dp"
         android:layout_centerInParent="true"
         />
 </RelativeLayout>

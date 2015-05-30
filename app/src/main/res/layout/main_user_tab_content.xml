@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/user_content_recycler"
-        android:layout_centerInParent="true"
-        android:paddingBottom="8dp" />
+        android:layout_centerInParent="true" />
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/user_fab"
         android:layout_width="wrap_content"

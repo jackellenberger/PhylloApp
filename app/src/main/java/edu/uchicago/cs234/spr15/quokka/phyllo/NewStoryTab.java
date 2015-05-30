@@ -1,5 +1,6 @@
 package edu.uchicago.cs234.spr15.quokka.phyllo;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -110,8 +110,16 @@ public class NewStoryTab extends Fragment {
             contentView.setMaxHeight((int) (275 * scale + 0.5f));
         }
 
-        return view;
+        Intent intent = getActivity().getIntent();
+        if (Intent.ACTION_SEND.equals(intent.getAction()))
+        {
+            String url = intent.getStringExtra(Intent.EXTRA_TEXT);
+            if (url != null) {
+                contentView.setText(url);
+            }
+        }
 
+        return view;
     }
 
     private void createNewTagView(final FragmentActivity context){

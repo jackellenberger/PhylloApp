@@ -4,6 +4,7 @@ package edu.uchicago.cs234.spr15.quokka.phyllo;
  * Created by jellenberger on 5/12/15.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -74,6 +75,15 @@ public class FragmentNewStory extends Fragment {
             @Override
             public void onPageScrollStateChanged(int state) { }
         });
+
+        Intent intent = getActivity().getIntent();
+        if (Intent.ACTION_SEND.equals(intent.getAction()))
+        {
+            String url = intent.getStringExtra(Intent.EXTRA_TEXT);
+            if (url != null) {
+                pager.setCurrentItem(1);
+            }
+        }
 
 
         return view;

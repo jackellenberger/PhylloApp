@@ -277,6 +277,21 @@ public class MainActivity extends ActionBarActivity {
         });
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.right_drawer));
 
+
+
+        //When a user chooses share from a browser
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEND.equals(intent.getAction()))
+        {
+            String url = intent.getStringExtra(Intent.EXTRA_TEXT);
+            if (url != null) {
+                //create FragmentNewStory when a link is shared to the app
+                android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_top, R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
+                FragmentNewStory mFragmentNewStory = new FragmentNewStory();
+                ft.replace(R.id.drawer_layout, mFragmentNewStory).addToBackStack(null).commit();
+            }
+        }
     }
 
     ///// HELPER FUNCTIONS FOR OPENING FRAGMENTS /////

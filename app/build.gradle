@@ -29,5 +29,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.+'//Recycler view (like a list view but better)
     compile 'com.github.brnunes:swipeablerecyclerview:1.0.1' //swipe to dismiss
     compile "com.wefika:flowlayout:0.4.0"                   //flow layout for tag lists
+    compile 'com.squareup.retrofit:retrofit:1.9.0'      //REST client
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+    compile 'com.squareup.okhttp:okhttp:2.0.0'      //HTTP interaction
 
 }

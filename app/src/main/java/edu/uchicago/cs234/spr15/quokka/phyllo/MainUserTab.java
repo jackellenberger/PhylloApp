@@ -77,8 +77,10 @@ public class MainUserTab extends Fragment {
         SwipeableRecyclerViewTouchListener swipeTouchListener =
             new SwipeableRecyclerViewTouchListener(mRecyclerView,
                 new SwipeableRecyclerViewTouchListener.SwipeListener() {
-                    @Override
-                    public boolean canSwipe(int position) {
+                    public boolean canSwipeLeft(int position) {
+                        return false;
+                    }
+                    public boolean canSwipeRight(int position) {
                         return true;
                     }
 

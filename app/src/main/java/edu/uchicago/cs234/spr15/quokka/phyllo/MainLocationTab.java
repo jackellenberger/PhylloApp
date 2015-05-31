@@ -81,9 +81,10 @@ public class MainLocationTab extends Fragment {
             new SwipeableRecyclerViewTouchListener(mRecyclerView,
                 new SwipeableRecyclerViewTouchListener.SwipeListener() {
                     @Override
-                    public boolean canSwipe(int position) {
-                                return true;
-                            }
+                    public boolean canSwipeLeft(int position) {return true;}
+                    public boolean canSwipeRight(int position) {
+                        return false;
+                    }
                     @Override
                     public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         Log.w("swipeRecyclerView", "Left");

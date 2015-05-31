@@ -13,7 +13,7 @@ public class ClassStoryInfo {
     private String content;
     private long timestamp;
     private String originalPoster;
-    private long locationId;
+    private long locationID;
     private String[] tagList;
 
     public long getStoryID() {
@@ -64,12 +64,12 @@ public class ClassStoryInfo {
         this.originalPoster = originalPoster;
     }
 
-    public long getLocationId() {
-        return locationId;
+    public long getLocationID() {
+        return locationID;
     }
 
-    public void setLocationId(long locationId) {
-        this.locationId = locationId;
+    public void setLocationID(long locationID) {
+        this.locationID = locationID;
     }
 
     public String[] getTagList() {
@@ -83,6 +83,6 @@ public class ClassStoryInfo {
     @Override
     public String toString() {
         Timestamp ts = new Timestamp(timestamp);
-        return Arrays.toString(tagList) + ", " + locationId + ", " + title + " (" + ts.toString() + " )" + ": " + content;
+        return Arrays.toString(tagList) + ", " + locationID + ", " + title + " (" + ts.toString() + " )" + ": " + content;
     }
 }

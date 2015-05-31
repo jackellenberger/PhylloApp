@@ -4,6 +4,7 @@ package edu.uchicago.cs234.spr15.quokka.phyllo;
  * Created by jellenberger on 5/10/15.
  */
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ public class AdapterRightDrawerRecycler extends RecyclerView.Adapter<AdapterRigh
     private int mIcons[];       // Int Array to store the passed icons resource value from MainActivity.java
 
     private String location;        //String Resource for header View Name
+    View headerView;
 
 
     // Creating a ViewHolder which extends the RecyclerView View Holder
@@ -89,9 +91,9 @@ public class AdapterRightDrawerRecycler extends RecyclerView.Adapter<AdapterRigh
 
         } else if (viewType == TYPE_HEADER) {
 
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.drawerutil_location_drawer_header,parent,false); //Inflating the layout
+            headerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.drawerutil_location_drawer_header,parent,false); //Inflating the layout
 
-            ViewHolder vhHeader = new ViewHolder(v,viewType); //Creating ViewHolder and passing the object of type view
+            ViewHolder vhHeader = new ViewHolder(headerView,viewType); //Creating ViewHolder and passing the object of type view
 
             return vhHeader; //returning the object created
 
@@ -137,4 +139,16 @@ public class AdapterRightDrawerRecycler extends RecyclerView.Adapter<AdapterRigh
         return position == 0;
     }
 
+    public void setHeaderText(String name, String lat, String lon){
+        Log.w("headerView", String.valueOf(headerView));
+        if (headerView != null) { //TODO: find a better solution than this
+            TextView headerLat = (TextView) headerView.findViewById(R.id.location_header_lat);
+            TextView headerLon = (TextView) headerView.findViewById(R.id.location_header_lon);
+            TextView headerLocationName = (TextView) headerView.findViewById(R.id.location_header_text);
+
+            headerLat.setText(lat);
+            headerLon.setText(lon);
+            headerLocationName.setText(name);
+        }
+    }
 }

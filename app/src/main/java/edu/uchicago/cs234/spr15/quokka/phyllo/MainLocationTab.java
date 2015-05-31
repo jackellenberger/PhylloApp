@@ -1,5 +1,11 @@
 package edu.uchicago.cs234.spr15.quokka.phyllo;
 
+import android.content.Context;
+import android.content.IntentFilter;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,8 +18,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +32,10 @@ public class MainLocationTab extends Fragment {
 
     private View myView;
     private DrawerLayout mDrawerLayout;
+    private long LOCATION_QUEUE_RADIUS = 5; //TODO: what is the location queue radisu supposed to be?
+    private ClassLocationInfo currentLocationInfo;
+    private LocationListener mLocationListener;
+    private static final int TWO_MINUTES = 1000 * 60 * 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -31,9 +45,10 @@ public class MainLocationTab extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(mFragmentActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        getCurrentLocation();
+
         final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(generateLocalData(3));
         mRecyclerView.setAdapter(mAdapter);
-
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             private float x1, x2temp;
 
@@ -75,6 +90,7 @@ public class MainLocationTab extends Fragment {
                             ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
                             //updatedAdapter.notifyItemRemoved(position);
                         }
+                        getCurrentLocation(); //TODO: remove this when i have a better solution
                         //updatedAdapter.notifyDataSetChanged();
                         return;
                     }
@@ -91,7 +107,7 @@ public class MainLocationTab extends Fragment {
 
     //TODO: fill generateLocalData with functions that will query external for stories
     private List<ClassStoryInfo> generateLocalData(int size) {
-
+        getCurrentLocation();
         List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
         java.util.Date date= new java.util.Date();
         long currentTime = date.getTime();
@@ -126,4 +142,115 @@ public class MainLocationTab extends Fragment {
         return result;
     }
 
+    //////// LOCATION BUSINESS //////////
+
+    protected Location getBetterLocation(Location newLocation, Location currentBestLocation) {
+        if (currentBestLocation == null) {
+            // A new location is always better than no location
+            return newLocation;
+        }
+
+        // Check whether the new location fix is newer or older
+        long timeDelta = newLocation.getTime() - currentBestLocation.getTime();
+        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
+        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+        boolean isNewer = timeDelta > 0;
+
+        // If it's been more than two minutes since the current location, use the new location
+        // because the user has likely moved.
+        if (isSignificantlyNewer) {
+            return newLocation;
+            // If the new location is more than two minutes older, it must be worse
+        } else if (isSignificantlyOlder) {
+            return currentBestLocation;
+        }
+
+        // Check whether the new location fix is more or less accurate
+        int accuracyDelta = (int) (newLocation.getAccuracy() - currentBestLocation.getAccuracy());
+        boolean isLessAccurate = accuracyDelta > 0;
+        boolean isMoreAccurate = accuracyDelta < 0;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+        // Check if the old and new location are from the same provider
+        boolean isFromSameProvider = isSameProvider(newLocation.getProvider(),
+                currentBestLocation.getProvider());
+
+        // Determine location quality using a combination of timeliness and accuracy
+        if (isMoreAccurate) {
+            return newLocation;
+        } else if (isNewer && !isLessAccurate) {
+            return newLocation;
+        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+            return newLocation;
+        }
+        return currentBestLocation;
+    }
+    /** Checks whether two providers are the same */
+    private boolean isSameProvider(String provider1, String provider2) {
+        if (provider1 == null) {
+            return provider2 == null;
+        }
+        return provider1.equals(provider2);
+    }
+
+
+    public void getCurrentLocation(){
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (currentLocationInfo == null) {
+            Log.w("currentLocationInfo","creating mLocationListener");
+            currentLocationInfo = new ClassLocationInfo();
+            currentLocationInfo.setLocationId(0);
+            currentLocationInfo.setLocationObject(null);
+            currentLocationInfo.setLatitude("Waiting for Location");
+            currentLocationInfo.setLongitude("Waiting for Location");
+            currentLocationInfo.setLocationName("Waiting for Location");
+            currentLocationInfo.setRadius(LOCATION_QUEUE_RADIUS);
+            updateLocationHeader();
+            mLocationListener = new LocationListener() {
+                public void onLocationChanged(Location loc){
+                    String latString = String.valueOf(loc.getLatitude());
+                    String lonString = String.valueOf(loc.getLongitude());
+                    currentLocationInfo.setLocationObject(loc);
+                    //TODO: private ClassLocationInfo getLocationQueueInfo(latString,lonString,LOCATION_QUEUE_RADIUS)
+                    currentLocationInfo.setLatitude(latString);
+                    currentLocationInfo.setLongitude(lonString);
+                    currentLocationInfo.setLocationId(0);
+                    currentLocationInfo.setLocationName("Some Location");
+                    currentLocationInfo.setRadius((long) LOCATION_QUEUE_RADIUS);
+
+                }
+                public void onProviderDisabled(String info){}
+                public void onProviderEnabled(String info){}
+                public void onStatusChanged(String arg1, int arg2, Bundle arg3){}
+            };
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+        }
+        else{
+            Location lastLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
+            currentLocationInfo.setLocationObject(getBetterLocation(lastLocation,currentLocationInfo.getLocationObject()));
+
+            String latString = String.valueOf(currentLocationInfo.getLatitude());
+            String lonString = String.valueOf(currentLocationInfo.getLongitude());
+
+            //TODO: private ClassLocationInfo getLocationQueueInfo(latString,lonString,LOCATION_QUEUE_RADIUS)
+
+            currentLocationInfo.setLatitude(latString);
+            currentLocationInfo.setLongitude(lonString);
+            currentLocationInfo.setLocationId(0);
+            currentLocationInfo.setLocationName("Some Location");
+            currentLocationInfo.setRadius((long) LOCATION_QUEUE_RADIUS);
+            updateLocationHeader();
+
+        }
+
+    }
+
+
+    private void updateLocationHeader(){
+        RecyclerView mRightDrawer = (RecyclerView) getActivity().findViewById(R.id.right_RecyclerView);
+        AdapterRightDrawerRecycler mRightDrawerAdapter = (AdapterRightDrawerRecycler) mRightDrawer.getAdapter();
+
+        mRightDrawerAdapter.setHeaderText(currentLocationInfo.getLatitude(), currentLocationInfo.getLongitude(), currentLocationInfo.getLocationName());
+    }
 }

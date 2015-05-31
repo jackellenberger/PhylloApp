@@ -84,7 +84,7 @@ public class UserStoryDb {
         story.setContent(cursor.getString(3));
         story.setTimestamp(cursor.getLong(4));
         story.setOriginalPoster(cursor.getString(5));
-        story.setLocationId(cursor.getLong(6));
+        story.setLocationID(cursor.getLong(6));
         String tags = cursor.getString(7);
         story.setTagList(convertStringToArray(tags));
         return story;

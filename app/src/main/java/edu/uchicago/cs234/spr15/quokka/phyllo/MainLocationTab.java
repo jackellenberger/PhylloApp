@@ -221,8 +221,6 @@ public class MainLocationTab extends Fragment {
             @Override
             public void success(List<TempStory> tempStories, Response response) {
                 Log.d("s", "success " + tempStories.size());
-                //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-
                 for (int i = 0; i < tempStories.size(); i++) {
                     ClassStoryInfo s = new ClassStoryInfo();
                     TempStory ts = tempStories.get(i);

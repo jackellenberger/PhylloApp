@@ -13,7 +13,8 @@ public class ClassStoryInfo {
     private String content;
     private long timestamp;
     private String originalPoster;
-    private long locationID;
+    private double latitude; //null until posting
+    private double longitude;
     private String[] tagList;
 
     public long getStoryID() {
@@ -64,12 +65,20 @@ public class ClassStoryInfo {
         this.originalPoster = originalPoster;
     }
 
-    public long getLocationID() {
-        return locationID;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLocationID(long locationID) {
-        this.locationID = locationID;
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLatitude(double lat) {
+        this.latitude = lat;
+    }
+
+    public void setLongitude(double lon) {
+        this.longitude = lon;
     }
 
     public String[] getTagList() {
@@ -83,6 +92,6 @@ public class ClassStoryInfo {
     @Override
     public String toString() {
         Timestamp ts = new Timestamp(timestamp);
-        return Arrays.toString(tagList) + ", " + locationID + ", " + title + " (" + ts.toString() + " )" + ": " + content;
+        return Arrays.toString(tagList) + ", " + title + " (" + ts.toString() + " )" + ": " + content;
     }
 }

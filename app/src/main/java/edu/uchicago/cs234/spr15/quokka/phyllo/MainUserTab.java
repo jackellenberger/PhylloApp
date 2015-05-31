@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 import com.melnykov.fab.FloatingActionButton;
@@ -97,6 +98,14 @@ public class MainUserTab extends Fragment {
                         for (int position : reverseSortedPositions) {
                             Log.w("SwipeableRecyclerViewTouchListener " + String.valueOf(position), String.valueOf(position));
                             ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
+                            ClassLocationInfo cli = MainLocationTab.getcurrentLocationInfo();
+                            if (cli == null){
+                                Toast.makeText(getActivity(),"Please find a location to post to", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            swipedStory.setLatitude(cli.getLatitude());
+                            swipedStory.setLongitude(cli.getLongitude());
+
                             //TODO: POST STORY FUNCTION
                             MainLocationTab mlt = new MainLocationTab();
                             try {
@@ -122,7 +131,7 @@ public class MainUserTab extends Fragment {
         // FAB: open FragmentNewStory when pressed
         fab.show();
         fab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v){
+            public void onClick(View v) {
                 android.support.v4.app.FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_top, R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
                 ft.replace(R.id.drawer_layout, new FragmentNewStory()).addToBackStack(null).commit();

@@ -38,7 +38,7 @@ public class MainLocationTab extends Fragment {
     private View myView;
     private DrawerLayout mDrawerLayout;
     private long LOCATION_QUEUE_RADIUS = 5; //TODO: what is the location queue radisu supposed to be?
-    private ClassLocationInfo currentLocationInfo;
+    private static ClassLocationInfo currentLocationInfo;
     private LocationListener mLocationListener;
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 
@@ -111,7 +111,7 @@ public class MainLocationTab extends Fragment {
 
     //TODO: fill generateLocalData with functions that will query external for stories
     private List<ClassStoryInfo> generateLocalData(int size) {
-        getCurrentLocation();
+        //getCurrentLocation();
         List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
         result = getLocationStories(40, 40, 200);
 //        java.util.Date date= new java.util.Date();
@@ -283,22 +283,20 @@ public class MainLocationTab extends Fragment {
             currentLocationInfo = new ClassLocationInfo();
             currentLocationInfo.setLocationId(0);
             currentLocationInfo.setLocationObject(null);
-            currentLocationInfo.setLatitude("Waiting for Location");
-            currentLocationInfo.setLongitude("Waiting for Location");
+            currentLocationInfo.setLatitude(-1);
+            currentLocationInfo.setLongitude(-1);
             currentLocationInfo.setLocationName("Waiting for Location");
             currentLocationInfo.setRadius(LOCATION_QUEUE_RADIUS);
             updateLocationHeader();
             mLocationListener = new LocationListener() {
                 public void onLocationChanged(Location loc){
-                    String latString = String.valueOf(loc.getLatitude());
-                    String lonString = String.valueOf(loc.getLongitude());
                     currentLocationInfo.setLocationObject(loc);
 
                     //TODO: private ClassLocationInfo getLocationQueueInfo(latString,lonString,LOCATION_QUEUE_RADIUS)
                     // NOTE: cast radius to INT for now
                     //List<ClassStoryInfo> stories = getLocationStories(Long.valueOf(lonString), Long.valueOf(latString), (int)LOCATION_QUEUE_RADIUS)
-                    currentLocationInfo.setLatitude(latString);
-                    currentLocationInfo.setLongitude(lonString);
+                    currentLocationInfo.setLatitude(loc.getLatitude());
+                    currentLocationInfo.setLongitude(loc.getLongitude());
                     currentLocationInfo.setLocationId(0);
                     currentLocationInfo.setLocationName("Some Location");
                     currentLocationInfo.setRadius((long) LOCATION_QUEUE_RADIUS);
@@ -319,13 +317,10 @@ public class MainLocationTab extends Fragment {
             Location lastLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
             currentLocationInfo.setLocationObject(getBetterLocation(lastLocation, currentLocationInfo.getLocationObject()));
 
-            String latString = String.valueOf(currentLocationInfo.getLatitude());
-            String lonString = String.valueOf(currentLocationInfo.getLongitude());
-
             //TODO: private ClassLocationInfo getLocationQueueInfo(latString,lonString,LOCATION_QUEUE_RADIUS)
 
-            currentLocationInfo.setLatitude(latString);
-            currentLocationInfo.setLongitude(lonString);
+            currentLocationInfo.setLatitude(currentLocationInfo.getLatitude());
+            currentLocationInfo.setLongitude(currentLocationInfo.getLongitude());
             currentLocationInfo.setLocationId(0);
             currentLocationInfo.setLocationName("Some Location");
             currentLocationInfo.setRadius((long) LOCATION_QUEUE_RADIUS);
@@ -335,11 +330,16 @@ public class MainLocationTab extends Fragment {
 
     }
 
+    public static ClassLocationInfo getcurrentLocationInfo(){
+        return currentLocationInfo;
+    }
 
     private void updateLocationHeader(){
         RecyclerView mRightDrawer = (RecyclerView) getActivity().findViewById(R.id.right_RecyclerView);
         AdapterRightDrawerRecycler mRightDrawerAdapter = (AdapterRightDrawerRecycler) mRightDrawer.getAdapter();
 
-        mRightDrawerAdapter.setHeaderText(currentLocationInfo.getLatitude(), currentLocationInfo.getLongitude(), currentLocationInfo.getLocationName());
+        mRightDrawerAdapter.setHeaderText(currentLocationInfo.getLatitude(),
+                                          currentLocationInfo.getLongitude(),
+                                          String.valueOf(currentLocationInfo.getLocationName()));
     }
 }

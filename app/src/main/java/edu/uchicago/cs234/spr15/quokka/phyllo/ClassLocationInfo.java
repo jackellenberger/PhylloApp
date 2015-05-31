@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class ClassLocationInfo {
     protected String locationName;
-    protected String latitude;
-    protected String longitude;
-    protected long radius;
+    protected double latitude;
+    protected double longitude;
+    protected double radius;
     protected long locationID;
     protected String[] tags;
     protected Location locationObject;
@@ -21,13 +21,13 @@ public class ClassLocationInfo {
     public String getLocationName(){
         return locationName;
     }
-    public String getLatitude(){
+    public double getLatitude(){
         return latitude;
     }
-    public String getLongitude(){
+    public double getLongitude(){
         return longitude;
     }
-    public long getRadius(){
+    public double getRadius(){
         return radius;
     }
     public long getLocationId(){
@@ -44,13 +44,13 @@ public class ClassLocationInfo {
     public void setLocationName(String locationName){
         this.locationName = locationName;
     }
-    public void setLatitude(String latitude){
+    public void setLatitude(double latitude){
         this.latitude = latitude;
     }
-    public void setLongitude(String longitude){
+    public void setLongitude(double longitude){
         this.longitude = longitude;
     }
-    public void setRadius(long radius){
+    public void setRadius(double radius){
         this.radius = radius;
     }
     public void setLocationId(long locationID){

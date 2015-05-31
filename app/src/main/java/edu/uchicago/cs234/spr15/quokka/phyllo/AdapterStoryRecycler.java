@@ -70,23 +70,25 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
         int px4 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, r.getDisplayMetrics());
         int px8 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, r.getDisplayMetrics());
 
-        for (String tag : tags){
-            TextView newView = new TextView(viewContext.getContext());
-            FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(0, px2, px4, px2);
-            newView.setLayoutParams(params);
-            newView.setId(tagNum);
-            newView.setPadding(px4,px2,px4,px2);
-            newView.setAllCaps(true);
-            newView.setTextColor(Color.BLACK);
-            newView.setText(tag);
-            newView.setBackgroundColor(r.getColor(R.color.background_material_light));
+        if (tags != null) {
+            for (String tag : tags) {
+                TextView newView = new TextView(viewContext.getContext());
+                FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(0, px2, px4, px2);
+                newView.setLayoutParams(params);
+                newView.setId(tagNum);
+                newView.setPadding(px4, px2, px4, px2);
+                newView.setAllCaps(true);
+                newView.setTextColor(Color.BLACK);
+                newView.setText(tag);
+                newView.setBackgroundColor(r.getColor(R.color.background_material_light));
 
-            tagNum += 1;
-            storyViewHolder.vTags.addView(newView);
+                tagNum += 1;
+                storyViewHolder.vTags.addView(newView);
+            }
         }
         //remove content view from tips
         if (!csi.getType().equals("tip")) { storyViewHolder.vContent.setText(csi.getContent()); }

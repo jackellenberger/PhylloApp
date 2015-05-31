@@ -86,7 +86,7 @@ public class NewStoryTab extends Fragment {
                     e.printStackTrace();
                 }
 
-                userDB.createStory(type, title, content, timestamp, poster, 0, tags);
+                userDB.createStory(type, title, content, timestamp, poster, -1.0, -1.0, tags);
 
                 RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.user_content_recycler);
                 recyclerView.setAdapter(new AdapterStoryRecycler(userDB.getAllStories()));
@@ -139,7 +139,6 @@ public class NewStoryTab extends Fragment {
         newTagView.setLayoutParams(params);
         newTagView.setPadding(px4, px2, px4, px2);
         newTagView.setTag((oldTagCount+1));
-        newTagView.setAllCaps(true);
         newTagView.setTextColor(Color.BLACK);
         newTagView.setBackgroundColor(r.getColor(R.color.background_material_light));
 

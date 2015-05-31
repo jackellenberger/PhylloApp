@@ -18,7 +18,8 @@ public class UserDbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STORY_CONTENT = "content";
     public static final String COLUMN_STORY_TIMESTAMP = "timestamp";
     public static final String COLUMN_STORY_POSTER = "poster"; // ORIGINAL POSTER
-    public static final String COLUMN_STORY_LOCATION_ID = "locationid";
+    public static final String COLUMN_STORY_LATITUDE = "latitude";
+    public static final String COLUMN_STORY_LONGITUDE = "longitude";
     public static final String COLUMN_STORY_TAGS = "tagList";
 
     private static final String DATABASE_NAME = "localUserQueue.db";
@@ -36,7 +37,8 @@ public class UserDbHelper extends SQLiteOpenHelper {
                     COLUMN_STORY_CONTENT + TEXT_TYPE + COMMA_SEP +
                     COLUMN_STORY_TIMESTAMP + REAL_TYPE + COMMA_SEP +
                     COLUMN_STORY_POSTER + TEXT_TYPE + COMMA_SEP +
-                    COLUMN_STORY_LOCATION_ID + INT_TYPE + COMMA_SEP +
+                    COLUMN_STORY_LATITUDE + REAL_TYPE + COMMA_SEP +
+                    COLUMN_STORY_LONGITUDE + REAL_TYPE + COMMA_SEP +
                     COLUMN_STORY_TAGS + TEXT_TYPE +
                     " )";
 

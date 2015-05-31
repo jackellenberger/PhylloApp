@@ -18,10 +18,11 @@ public class UserStoryDb {
     // Database fields
     private SQLiteDatabase database;
     private UserDbHelper dbHelper;
-    private String[] allColumns = { UserDbHelper.COLUMN_STORY_ID, UserDbHelper.COLUMN_STORY_TYPE,
-            UserDbHelper.COLUMN_STORY_TITLE,
+    private String[] allColumns = { UserDbHelper.COLUMN_STORY_ID,
+            UserDbHelper.COLUMN_STORY_TYPE, UserDbHelper.COLUMN_STORY_TITLE,
             UserDbHelper.COLUMN_STORY_CONTENT, UserDbHelper.COLUMN_STORY_TIMESTAMP,
-            UserDbHelper.COLUMN_STORY_POSTER, UserDbHelper.COLUMN_STORY_LOCATION_ID, UserDbHelper.COLUMN_STORY_TAGS, };
+            UserDbHelper.COLUMN_STORY_POSTER, UserDbHelper.COLUMN_STORY_LATITUDE,
+            UserDbHelper.COLUMN_STORY_LONGITUDE, UserDbHelper.COLUMN_STORY_TAGS, };
 
     public UserStoryDb(Context context) {
         dbHelper = new UserDbHelper(context);
@@ -36,17 +37,17 @@ public class UserStoryDb {
     }
 
     public void createStory(String type, String title, String content,
-                            long timestamp, String poster, long locationId, String[] tags) {
+                            long timestamp, String poster, double latitude, double longitude, String[] tags) {
         ContentValues values = new ContentValues();
         values.put(UserDbHelper.COLUMN_STORY_TYPE, type);
         values.put(UserDbHelper.COLUMN_STORY_TITLE, title);
         values.put(UserDbHelper.COLUMN_STORY_CONTENT, content);
         values.put(UserDbHelper.COLUMN_STORY_TIMESTAMP, System.currentTimeMillis());
         values.put(UserDbHelper.COLUMN_STORY_POSTER, poster);
-        values.put(UserDbHelper.COLUMN_STORY_LOCATION_ID, locationId);
+        values.put(UserDbHelper.COLUMN_STORY_LATITUDE, latitude);
+        values.put(UserDbHelper.COLUMN_STORY_LONGITUDE, longitude);
         values.put(UserDbHelper.COLUMN_STORY_TAGS, convertArrayToString(tags));
         long insertId = database.insert(UserDbHelper.TABLE_NAME, null, values);
-        Log.w("inserting timestamp ", String.valueOf(timestamp));
         Cursor cursor = database.query(UserDbHelper.TABLE_NAME, allColumns, UserDbHelper.COLUMN_STORY_ID + " = " + insertId, null, null, null, null);
         //Story newStory = cursorToStory(cursor);
         cursor.close();
@@ -84,8 +85,9 @@ public class UserStoryDb {
         story.setContent(cursor.getString(3));
         story.setTimestamp(cursor.getLong(4));
         story.setOriginalPoster(cursor.getString(5));
-        story.setLocationID(cursor.getLong(6));
-        String tags = cursor.getString(7);
+        story.setLongitude(cursor.getDouble(6));
+        story.setLatitude(cursor.getDouble(7));
+        String tags = cursor.getString(8);
         story.setTagList(convertStringToArray(tags));
         return story;
     }

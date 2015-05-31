@@ -224,13 +224,13 @@ public class MainLocationTab extends Fragment {
             if(locationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
             }
-            if(locationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+            if(locationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
             }
         }
         else{
             Location lastLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), true));
-            currentLocationInfo.setLocationObject(getBetterLocation(lastLocation,currentLocationInfo.getLocationObject()));
+            currentLocationInfo.setLocationObject(getBetterLocation(lastLocation, currentLocationInfo.getLocationObject()));
 
             String latString = String.valueOf(currentLocationInfo.getLatitude());
             String lonString = String.valueOf(currentLocationInfo.getLongitude());

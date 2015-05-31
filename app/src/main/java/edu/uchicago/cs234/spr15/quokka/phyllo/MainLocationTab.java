@@ -39,23 +39,28 @@ public class MainLocationTab extends Fragment {
 
     private View myView;
     private DrawerLayout mDrawerLayout;
-    private long LOCATION_QUEUE_RADIUS = 5; //TODO: what is the location queue radisu supposed to be?
+    private static double LOCATION_QUEUE_RADIUS = 500.0; //TODO: what is the location queue radisu supposed to be?
     private static ClassLocationInfo currentLocationInfo;
-    private LocationListener mLocationListener;
+    private static LocationListener mLocationListener;
+    private static RecyclerView mRecyclerView;
+    private static View view;
+    private static FragmentActivity activity;
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.main_location_tab_content, container, false);
+        view = inflater.inflate(R.layout.main_location_tab_content, container, false);
+        activity = getActivity();
         final FragmentActivity mFragmentActivity = getActivity();
-        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.location_content_recycler);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.location_content_recycler);
         final RecyclerView userRecyclerView = (RecyclerView) getActivity().findViewById(R.id.user_content_recycler);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(mFragmentActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         getCurrentLocation();
 
-        final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(generateLocalData(3));
+        //final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(getLocationStories(currentLocationInfo.getLatitude(),currentLocationInfo.getLongitude(),currentLocationInfo.getRadius()));
+        final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(getLocationStories(40,40,200));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             private float x1, x2temp;
@@ -120,17 +125,9 @@ public class MainLocationTab extends Fragment {
 
     }
 
-    //TODO: fill generateLocalData with functions that will query external for stories
-    private List<ClassStoryInfo> generateLocalData(int size) {
-        //getCurrentLocation();
-        List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
-        result = getLocationStories(40, 40, 200);
-        return result;
-    }
-
     //////// LOCATION BUSINESS //////////
 
-    protected Location getBetterLocation(Location newLocation, Location currentBestLocation) {
+    protected static Location getBetterLocation(Location newLocation, Location currentBestLocation) {
         if (currentBestLocation == null) {
             // A new location is always better than no location
             return newLocation;
@@ -172,7 +169,7 @@ public class MainLocationTab extends Fragment {
         return currentBestLocation;
     }
     /** Checks whether two providers are the same */
-    private boolean isSameProvider(String provider1, String provider2) {
+    private static boolean isSameProvider(String provider1, String provider2) {
         if (provider1 == null) {
             return provider2 == null;
         }
@@ -205,12 +202,12 @@ public class MainLocationTab extends Fragment {
 
         @GET("/stories/{longitude}/{latitude}/{radius}")
         public void getLocationStories(@Path("longitude") long longitude,
-                                       @Path("latitude") long latitude, @Path("radius") int radius,
+                                       @Path("latitude") long latitude, @Path("radius") long radius,
                                        Callback<List<TempStory>> stories);
 
     }
 
-    private List<ClassStoryInfo> getLocationStories(long longitude, long latitude, int radius) {
+    public static List<ClassStoryInfo> getLocationStories(long longitude, long latitude, long radius) {
         final List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -264,9 +261,9 @@ public class MainLocationTab extends Fragment {
         });
     }
 
-    public void getCurrentLocation(){
-        Log.w("getCurrentLocation","start...");
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+    public static void getCurrentLocation(){
+        Log.w("getCurrentLocation", "start...");
+        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         if (currentLocationInfo == null) {
             Log.w("currentLocationInfo","creating mLocationListener");
             currentLocationInfo = new ClassLocationInfo();
@@ -310,7 +307,8 @@ public class MainLocationTab extends Fragment {
             updateLocationHeader();
 
         }
-        Log.w("getCurrentLocation","end...");
+        updateLocationHeader();
+        Log.w("getCurrentLocation", "end...");
 
     }
 
@@ -319,10 +317,20 @@ public class MainLocationTab extends Fragment {
         return currentLocationInfo;
     }
 
-    private void updateLocationHeader(){
-        RecyclerView mRightDrawer = (RecyclerView) getActivity().findViewById(R.id.right_RecyclerView);
-        AdapterRightDrawerRecycler mRightDrawerAdapter = (AdapterRightDrawerRecycler) mRightDrawer.getAdapter();
+    public static void refreshLocationRecycler() {
+        if (mRecyclerView != null) {
+            //getCurrentLocation();
+            //AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(getLocationStories(currentLocationInfo.getLatitude(),currentLocationInfo.getLongitude(), currentLocationInfo.getRadius()));
+            List<ClassStoryInfo> newStories = getLocationStories(40,40,200);
+            AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(newStories);
+            mRecyclerView.setAdapter(updatedAdapter);
+            updatedAdapter.notifyDataSetChanged();
+        }
+    }
 
+    private static void updateLocationHeader() {
+        RecyclerView mRightDrawer = (RecyclerView) activity.findViewById(R.id.right_RecyclerView);
+        AdapterRightDrawerRecycler mRightDrawerAdapter = (AdapterRightDrawerRecycler) mRightDrawer.getAdapter();
         mRightDrawerAdapter.setHeaderText(currentLocationInfo.getLatitude(),
                                           currentLocationInfo.getLongitude(),
                                           String.valueOf(currentLocationInfo.getLocationName()));

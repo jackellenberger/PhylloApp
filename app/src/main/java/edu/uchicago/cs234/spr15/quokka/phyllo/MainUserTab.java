@@ -127,6 +127,7 @@ public class MainUserTab extends Fragment {
                             //updatedAdapter.notifyItemRemoved(position);
                         }
                         refreshUserRecycler();
+                        MainLocationTab.refreshLocationRecycler();
                     }
                 });
         mRecyclerView.addOnItemTouchListener(swipeTouchListener);

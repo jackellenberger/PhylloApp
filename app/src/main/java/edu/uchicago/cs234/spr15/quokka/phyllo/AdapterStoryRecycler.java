@@ -91,11 +91,11 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
             }
         }
         //remove content view from tips
-        if (!csi.getType().equals("tip")) { storyViewHolder.vContent.setText(csi.getContent()); }
-        else { storyViewHolder.vContent.setVisibility(View.GONE);}
+        if (csi.getType().equals("tip")) { storyViewHolder.vContent.setVisibility(View.GONE);}
+        else { storyViewHolder.vContent.setText(csi.getContent()); }
 
         //hyperlink links
-        if(csi.getType().equals("link") || csi.getType().equals("url")){
+        if(csi.getType().equals("url")){
             storyViewHolder.vContent.setAutoLinkMask(1);
             storyViewHolder.vContent.setMovementMethod(LinkMovementMethod.getInstance());
         }

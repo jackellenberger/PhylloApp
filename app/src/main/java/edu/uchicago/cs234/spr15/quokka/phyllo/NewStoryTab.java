@@ -70,7 +70,7 @@ public class NewStoryTab extends Fragment {
 
                 String type;
                 if (position == 0) {type = "tip";}
-                else if (position == 1) {type = "link";}
+                else if (position == 1) {type = "url";}
                 else {type = "longform";}
 
                 Date date= new Date();

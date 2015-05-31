@@ -187,6 +187,8 @@ public class MainLocationTab extends Fragment {
         private String title;
         private String content;
         private String timestamp;
+        private String originalPoster;
+        private String[] tags;
     }
 
     public interface LocationService {
@@ -217,13 +219,15 @@ public class MainLocationTab extends Fragment {
         service.getLocationStories(longitude, latitude, radius, new Callback<List<TempStory>>() {
             @Override
             public void success(List<TempStory> tempStories, Response response) {
-                Log.d("s", "success " + tempStories.size());
+                Log.d("s", response.toString() + "success " + tempStories.size());
                 for (int i = 0; i < tempStories.size(); i++) {
                     ClassStoryInfo s = new ClassStoryInfo();
                     TempStory ts = tempStories.get(i);
                     s.setTitle(ts.title);
                     s.setType(ts.type);
                     s.setContent(ts.content);
+                    s.setTagList(ts.tags);
+                    s.setOriginalPoster(ts.originalPoster);
                     result.add(s);
                 }
             }

@@ -22,7 +22,10 @@ import android.widget.Toast;
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit.Callback;
@@ -218,12 +221,18 @@ public class MainLocationTab extends Fragment {
             @Override
             public void success(List<TempStory> tempStories, Response response) {
                 Log.d("s", "success " + tempStories.size());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
                 for (int i = 0; i < tempStories.size(); i++) {
                     ClassStoryInfo s = new ClassStoryInfo();
                     TempStory ts = tempStories.get(i);
                     s.setTitle(ts.title);
                     s.setType(ts.type);
                     s.setContent(ts.content);
+                    try {
+                        Date parsedDate = dateFormat.parse(ts.timestamp);
+                        Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+                        s.setTimestamp(timestamp.getTime());
+                    }catch(Exception e){}
                     result.add(s);
                 }
             }
@@ -270,12 +279,11 @@ public class MainLocationTab extends Fragment {
 
                     //TODO: private ClassLocationInfo getLocationQueueInfo(latString,lonString,LOCATION_QUEUE_RADIUS)
                     // NOTE: cast radius to INT for now
-                    //List<ClassStoryInfo> stories = getLocationStories(Long.valueOf(lonString), Long.valueOf(latString), (int)LOCATION_QUEUE_RADIUS)
                     currentLocationInfo.setLatitude(loc.getLatitude());
                     currentLocationInfo.setLongitude(loc.getLongitude());
                     currentLocationInfo.setLocationId(0);
                     currentLocationInfo.setLocationName("Some Location");
-                    currentLocationInfo.setRadius((long) LOCATION_QUEUE_RADIUS);
+                    currentLocationInfo.setRadius(LOCATION_QUEUE_RADIUS);
 
                 }
                 public void onProviderDisabled(String info){}

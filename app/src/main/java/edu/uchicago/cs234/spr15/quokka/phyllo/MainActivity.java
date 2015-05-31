@@ -277,6 +277,16 @@ public class MainActivity extends ActionBarActivity {
         });
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.right_drawer));
 
+        ///// REFRESH BUTTON /////
+        View refreshButton = findViewById(R.id.refreshButton);
+        refreshButton.isClickable();
+        refreshButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                MainUserTab.refreshUserRecycler();
+                //MainLocationTab.refreshLocationRecycer();
+            }
+        });
+
         ///// SHARING FROM BROWSER TO APP /////
         Intent intent = getIntent();
         if (Intent.ACTION_SEND.equals(intent.getAction()))

@@ -21,19 +21,19 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 //TODO: make longforms clickable so that they expand into their full form. normally only display ~20 lines
-//TODO: make links hyperlinks
-//TODO: capture share from external
 
 public class MainUserTab extends Fragment {
 
     private DrawerLayout mDrawerLayout;
     private static UserStoryDb userDb;
+    private static RecyclerView mRecyclerView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.main_user_tab_content, container, false);
 
         final FragmentActivity mFragmentActivity = getActivity();
-        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.user_content_recycler);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.user_content_recycler);
         View mRelativeLayout = (View) view.findViewById(R.id.user_content_relative_layout);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(mFragmentActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -49,23 +49,25 @@ public class MainUserTab extends Fragment {
         final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(userDb.getAllStories());
         mRecyclerView.setAdapter(mAdapter);
 
-
+        // allow child (recycler) to handle touch events, or give them up to slidingtablayout when applicable
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
-            private float x1, x2temp;
+            private float x1, x2, y1, y2;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         x1 = event.getX();
+                        y1 = event.getY();
                         if (x1 > 73) {
                             //leave room for drawer to be pulled
                             v.getParent().requestDisallowInterceptTouchEvent(true);
                         }
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        x2temp = event.getX();
-                        if (x2temp < x1) {
+                        x2 = event.getX();
+                        y2 = event.getY();
+                        if (x2 < x1) {
                             //if you sliding left, allow for intercept to be handled by slidingTabLayout
                             v.getParent().requestDisallowInterceptTouchEvent(false);
                         }
@@ -75,6 +77,10 @@ public class MainUserTab extends Fragment {
             }
         });
 
+
+
+
+        ///// Swipe To Post /////
         SwipeableRecyclerViewTouchListener swipeTouchListener =
             new SwipeableRecyclerViewTouchListener(mRecyclerView,
                 new SwipeableRecyclerViewTouchListener.SwipeListener() {
@@ -118,11 +124,9 @@ public class MainUserTab extends Fragment {
                             }
                             userDb.deleteStory(swipedStory);
                             //TODO: Give option to not delete?
-                            updatedAdapter.notifyItemRemoved(position);
+                            //updatedAdapter.notifyItemRemoved(position);
                         }
-                        updatedAdapter = new AdapterStoryRecycler(userDb.getAllStories());
-                        recyclerView.setAdapter(updatedAdapter);
-                        updatedAdapter.notifyDataSetChanged();
+                        refreshUserRecycler();
                     }
                 });
         mRecyclerView.addOnItemTouchListener(swipeTouchListener);
@@ -146,5 +150,15 @@ public class MainUserTab extends Fragment {
     public static UserStoryDb getUserDb(){
         return userDb;
     }
+
+    public static void refreshUserRecycler() {
+        if (mRecyclerView != null) {
+            Toast.makeText(mRecyclerView.getContext(),"Refreshing Stories",Toast.LENGTH_SHORT).show();
+            AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(userDb.getAllStories());
+            mRecyclerView.setAdapter(updatedAdapter);
+            updatedAdapter.notifyDataSetChanged();
+        }
+    }
+
 
 }

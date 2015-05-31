@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 import com.melnykov.fab.FloatingActionButton;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 //TODO: make longforms clickable so that they expand into their full form. normally only display ~20 lines
@@ -95,6 +96,12 @@ public class MainUserTab extends Fragment {
                             Log.w("SwipeableRecyclerViewTouchListener " + String.valueOf(position), String.valueOf(position));
                             ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
                             //TODO: POST STORY FUNCTION
+                            MainLocationTab mlt = new MainLocationTab();
+                            try {
+                                mlt.postStory(swipedStory);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             userDb.deleteStory(swipedStory);
                             //TODO: Give option to not delete?
                             updatedAdapter.notifyItemRemoved(position);

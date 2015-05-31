@@ -1,7 +1,6 @@
 package edu.uchicago.cs234.spr15.quokka.phyllo;
 
 import android.content.Context;
-import android.content.IntentFilter;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,15 +17,21 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.Path;
 
 public class MainLocationTab extends Fragment {
 
@@ -107,36 +112,37 @@ public class MainLocationTab extends Fragment {
     private List<ClassStoryInfo> generateLocalData(int size) {
         getCurrentLocation();
         List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
-        java.util.Date date= new java.util.Date();
-        long currentTime = date.getTime();
-        for (int i=1; i <= size; i++) {
-            ClassStoryInfo csi = new ClassStoryInfo();
-            if (i % 3 == 0) {
-                csi.setType("tip");
-                csi.setTitle("This is tip number " + (i/3));
-                csi.setContent("You shouldn't be able to see this!!1!");
-                csi.setTimestamp(currentTime);
-                csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"tweet","tweet","imma bird"});
-            }
-            else if (i % 3 == 1) {
-                csi.setType("longform");
-                csi.setTitle("This is longform number " + (i / 3));
-                csi.setContent(getString(R.string.filler_text));
-                csi.setTimestamp(currentTime);
-                csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"Latin filler","blag","quokka"});
-            }
-            else{
-                csi.setType("link");
-                csi.setTitle("This is link number " + (i / 3));
-                csi.setContent("https://cs.uchicago.edu");
-                csi.setTimestamp(currentTime);
-                csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"uchicago","cs","edu","educate yo self"});
-            }
-            result.add(csi);
-        }
+        result = getLocationStories(40, 40, 200);
+//        java.util.Date date= new java.util.Date();
+//        long currentTime = date.getTime();
+//        for (int i=1; i <= size; i++) {
+//            ClassStoryInfo csi = new ClassStoryInfo();
+//            if (i % 3 == 0) {
+//                csi.setType("tip");
+//                csi.setTitle("This is tip number " + (i/3));
+//                csi.setContent("You shouldn't be able to see this!!1!");
+//                csi.setTimestamp(currentTime);
+//                csi.setOriginalPoster("The Quokka In The Sky");
+//                csi.setTagList(new String[]{"tweet","tweet","imma bird"});
+//            }
+//            else if (i % 3 == 1) {
+//                csi.setType("longform");
+//                csi.setTitle("This is longform number " + (i / 3));
+//                csi.setContent(getString(R.string.filler_text));
+//                csi.setTimestamp(currentTime);
+//                csi.setOriginalPoster("The Quokka In The Sky");
+//                csi.setTagList(new String[]{"Latin filler","blag","quokka"});
+//            }
+//            else{
+//                csi.setType("link");
+//                csi.setTitle("This is link number " + (i / 3));
+//                csi.setContent("https://cs.uchicago.edu");
+//                csi.setTimestamp(currentTime);
+//                csi.setOriginalPoster("The Quokka In The Sky");
+//                csi.setTagList(new String[]{"uchicago","cs","edu","educate yo self"});
+//            }
+//            result.add(csi);
+//        }
         return result;
     }
 
@@ -191,6 +197,83 @@ public class MainLocationTab extends Fragment {
         return provider1.equals(provider2);
     }
 
+    /** Getting stories from server */
+    private static final String API_URL = "https://floating-wildwood-9614.herokuapp.com";
+
+    // Temporary story for converting JSON to story
+    private class TempStory {
+        private String type;
+        private String title;
+        private String content;
+        private String timestamp;
+    }
+
+    public interface LocationService {
+        @GET("/stories")
+        public void getHelloWorld(Callback<String> str);
+
+        @GET("/stories/{pk}")
+        // Asynchronously with a callback
+        public void getStory(@Path("pk") int pk, Callback<TempStory> story);
+
+        @POST("/stories/new")
+        public void sendStory(@Body ClassStoryInfo story, Callback<String> str);
+
+        @GET("/stories/{longitude}/{latitude}/{radius}")
+        public void getLocationStories(@Path("longitude") long longitude,
+                                       @Path("latitude") long latitude, @Path("radius") int radius,
+                                       Callback<List<TempStory>> stories);
+
+    }
+
+    private List<ClassStoryInfo> getLocationStories(long longitude, long latitude, int radius) {
+        final List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(API_URL)
+                .build();
+        LocationService service = restAdapter.create(LocationService.class);
+        service.getLocationStories(longitude, latitude, radius, new Callback<List<TempStory>>() {
+            @Override
+            public void success(List<TempStory> tempStories, Response response) {
+                Log.d("s", "success " + tempStories.size());
+                for (int i = 0; i < tempStories.size(); i++) {
+                    ClassStoryInfo s = new ClassStoryInfo();
+                    TempStory ts = tempStories.get(i);
+                    s.setTitle(ts.title);
+                    s.setType(ts.type);
+                    s.setContent(ts.content);
+                    result.add(s);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("failed", error.getMessage());
+            }
+        });
+
+        return result;
+    }
+
+    public void postStory(ClassStoryInfo story) throws IOException {
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(API_URL)
+                .build();
+        LocationService service = restAdapter.create(LocationService.class);
+        service.sendStory(story, new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.d("story posted!", s);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("failed", error.getMessage());
+            }
+        });
+    }
 
     public void getCurrentLocation(){
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -209,7 +292,10 @@ public class MainLocationTab extends Fragment {
                     String latString = String.valueOf(loc.getLatitude());
                     String lonString = String.valueOf(loc.getLongitude());
                     currentLocationInfo.setLocationObject(loc);
+
                     //TODO: private ClassLocationInfo getLocationQueueInfo(latString,lonString,LOCATION_QUEUE_RADIUS)
+                    // NOTE: cast radius to INT for now
+                    //List<ClassStoryInfo> stories = getLocationStories(Long.valueOf(lonString), Long.valueOf(latString), (int)LOCATION_QUEUE_RADIUS)
                     currentLocationInfo.setLatitude(latString);
                     currentLocationInfo.setLongitude(lonString);
                     currentLocationInfo.setLocationId(0);

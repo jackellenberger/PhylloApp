@@ -190,6 +190,8 @@ public class MainLocationTab extends Fragment {
         private String title;
         private String content;
         private String timestamp;
+        private String originalPoster;
+        private String[] tags;
     }
 
     public interface LocationService {
@@ -222,6 +224,7 @@ public class MainLocationTab extends Fragment {
             public void success(List<TempStory> tempStories, Response response) {
                 Log.d("s", "success " + tempStories.size());
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+                Log.d("s", response.toString() + "success " + tempStories.size());
                 for (int i = 0; i < tempStories.size(); i++) {
                     ClassStoryInfo s = new ClassStoryInfo();
                     TempStory ts = tempStories.get(i);
@@ -233,6 +236,8 @@ public class MainLocationTab extends Fragment {
                         Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
                         s.setTimestamp(timestamp.getTime());
                     }catch(Exception e){}
+                    s.setTagList(ts.tags);
+                    s.setOriginalPoster(ts.originalPoster);
                     result.add(s);
                 }
             }

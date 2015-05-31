@@ -45,8 +45,6 @@ public class MainLocationTab extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(mFragmentActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        getCurrentLocation();
-
         final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(generateLocalData(3));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {

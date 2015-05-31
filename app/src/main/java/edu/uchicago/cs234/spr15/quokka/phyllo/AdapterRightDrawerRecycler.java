@@ -139,7 +139,7 @@ public class AdapterRightDrawerRecycler extends RecyclerView.Adapter<AdapterRigh
         return position == 0;
     }
 
-    public void setHeaderText(String name, String lat, String lon){
+    public void setHeaderText(String lat, String lon, String name){
         Log.w("headerView", String.valueOf(headerView));
         if (headerView != null) { //TODO: find a better solution than this
             TextView headerLat = (TextView) headerView.findViewById(R.id.location_header_lat);

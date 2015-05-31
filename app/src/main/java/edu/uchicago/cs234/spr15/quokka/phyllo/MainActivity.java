@@ -277,9 +277,7 @@ public class MainActivity extends ActionBarActivity {
         });
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, findViewById(edu.uchicago.cs234.spr15.quokka.phyllo.R.id.right_drawer));
 
-
-
-        //When a user chooses share from a browser
+        ///// SHARING FROM BROWSER TO APP /////
         Intent intent = getIntent();
         if (Intent.ACTION_SEND.equals(intent.getAction()))
         {

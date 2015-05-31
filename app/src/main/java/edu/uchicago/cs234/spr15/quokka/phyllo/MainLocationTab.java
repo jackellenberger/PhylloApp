@@ -23,9 +23,7 @@ import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListen
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import retrofit.Callback;
@@ -223,21 +221,19 @@ public class MainLocationTab extends Fragment {
             @Override
             public void success(List<TempStory> tempStories, Response response) {
                 Log.d("s", "success " + tempStories.size());
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-                Log.d("s", response.toString() + "success " + tempStories.size());
+                //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+
                 for (int i = 0; i < tempStories.size(); i++) {
                     ClassStoryInfo s = new ClassStoryInfo();
                     TempStory ts = tempStories.get(i);
                     s.setTitle(ts.title);
                     s.setType(ts.type);
                     s.setContent(ts.content);
-                    try {
-                        Date parsedDate = dateFormat.parse(ts.timestamp);
-                        Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
-                        s.setTimestamp(timestamp.getTime());
-                    }catch(Exception e){}
                     s.setTagList(ts.tags);
                     s.setOriginalPoster(ts.originalPoster);
+                    String newTs = ts.timestamp.replace('T', ' ').replace('Z', '0');
+                    Timestamp time = Timestamp.valueOf(newTs);
+                    s.setTimestamp(time.getTime());
                     result.add(s);
                 }
             }

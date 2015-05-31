@@ -15,8 +15,18 @@ import android.view.ViewGroup;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.Path;
 
 public class MainLocationTab extends Fragment {
 
@@ -30,6 +40,8 @@ public class MainLocationTab extends Fragment {
         final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.location_content_recycler);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(mFragmentActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+
 
         final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(generateLocalData(3));
         mRecyclerView.setAdapter(mAdapter);
@@ -60,69 +72,135 @@ public class MainLocationTab extends Fragment {
         });
 
         SwipeableRecyclerViewTouchListener swipeTouchListener =
-            new SwipeableRecyclerViewTouchListener(mRecyclerView,
-                new SwipeableRecyclerViewTouchListener.SwipeListener() {
-                    @Override
-                    public boolean canSwipe(int position) {
+                new SwipeableRecyclerViewTouchListener(mRecyclerView,
+                        new SwipeableRecyclerViewTouchListener.SwipeListener() {
+                            @Override
+                            public boolean canSwipe(int position) {
                                 return true;
                             }
-                    @Override
-                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
-                        Log.w("swipeRecyclerView", "Left");
-                        AdapterStoryRecycler updatedAdapter = (AdapterStoryRecycler) recyclerView.getAdapter();
-                        for (int position : reverseSortedPositions) {
-                            Log.w("SwipeableRecyclerViewTouchListener " + String.valueOf(position), String.valueOf(position));
-                            ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
-                            //updatedAdapter.notifyItemRemoved(position);
-                        }
-                        //updatedAdapter.notifyDataSetChanged();
-                        return;
-                    }
-                    @Override
-                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
-                        Log.w("swipeRecyclerView", "Right");
-                    }
-                });
+                            @Override
+                            public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                Log.w("swipeRecyclerView", "Left");
+                                AdapterStoryRecycler updatedAdapter = (AdapterStoryRecycler) recyclerView.getAdapter();
+                                for (int position : reverseSortedPositions) {
+                                    Log.w("SwipeableRecyclerViewTouchListener " + String.valueOf(position), String.valueOf(position));
+                                    ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
+                                    //updatedAdapter.notifyItemRemoved(position);
+                                }
+                                //updatedAdapter.notifyDataSetChanged();
+                                return;
+                            }
+                            @Override
+                            public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                Log.w("swipeRecyclerView", "Right");
+                            }
+                        });
         mRecyclerView.addOnItemTouchListener(swipeTouchListener);
 
         return view;
 
     }
 
+    // To convert from JSON to story
+    private class TempStory {
+//        private int id;
+        private String type;
+        private String title;
+        private String content;
+        private String timestamp;
+//        private int originalPoster;
+//        private int location;
+//        private int[] tags;
+    }
+
+    // "http://10.0.3.2:8000"
+    private static final String API_URL = "https://floating-wildwood-9614.herokuapp.com";
+
+    public interface LocationService {
+        @GET("/stories")
+        public void getHelloWorld(Callback<String> str);
+
+        @GET("/stories/{pk}")
+        // Asynchronously with a callback
+        public void getStory(@Path("pk") int pk, Callback<TempStory> story);
+
+        // not working ugh
+        @POST("/stories/new")
+        public void sendStory(@Body ClassStoryInfo story, Callback<String> str);
+
+        @GET("/stories/{longitude}/{latitude}/{radius}")
+        public void getLocationStories(@Path("longitude") long longitude,
+                                       @Path("latitude") long latitude, @Path("radius") int radius,
+                                       Callback<List<TempStory>> stories);
+
+    }
+
+    private void getLocationStories(long longitude, long latitude, int radius) {
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(API_URL)
+                .build();
+        LocationService service = restAdapter.create(LocationService.class);
+        service.getLocationStories(longitude, latitude, radius, new Callback<List<TempStory>>() {
+            @Override
+            public void success(List<TempStory> tempStories, Response response) {
+                Log.d("s", "success " + tempStories.size());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("failed", error.getMessage());
+            }
+        });
+    }
+
+    public void postStory(ClassStoryInfo story) throws IOException {
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(API_URL)
+                .build();
+        LocationService service = restAdapter.create(LocationService.class);
+        service.sendStory(story, new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.d("can you feel it", s);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("failed", error.getMessage());
+            }
+        });
+    }
+
     //TODO: fill generateLocalData with functions that will query external for stories
     private List<ClassStoryInfo> generateLocalData(int size) {
+        getLocationStories(40, 40, 200); // Get stories based on location info
 
-        List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
-        java.util.Date date= new java.util.Date();
-        long currentTime = date.getTime();
-        for (int i=1; i <= size; i++) {
-            ClassStoryInfo csi = new ClassStoryInfo();
-            if (i % 3 == 0) {
-                csi.setType("tip");
-                csi.setTitle("This is tip number " + (i/3));
-                csi.setContent("You shouldn't be able to see this!!1!");
-                csi.setTimestamp(currentTime);
-                csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"tweet","tweet","imma bird"});
+        final List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(API_URL)
+                //.setConverter(new StringConverter())
+                .build();
+
+        LocationService service = restAdapter.create(LocationService.class);
+
+        service.getStory(1, new Callback<TempStory>() {
+            @Override
+            public void success(TempStory s, Response response) {
+                Log.d("success", s.title);
+                ClassStoryInfo story = new ClassStoryInfo();
+                story.setType(s.type);
+                story.setTitle(s.title);
+                story.setContent(s.content);
+                result.add(story);
             }
-            else if (i % 3 == 1) {
-                csi.setType("longform");
-                csi.setTitle("This is longform number " + (i / 3));
-                csi.setContent(getString(R.string.filler_text));
-                csi.setTimestamp(currentTime);
-                csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"Latin filler","blag","quokka"});
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("failed", error.getMessage());
             }
-            else{
-                csi.setType("link");
-                csi.setTitle("This is link number " + (i / 3));
-                csi.setContent("https://cs.uchicago.edu");
-                csi.setTimestamp(currentTime);
-                csi.setOriginalPoster("The Quokka In The Sky");
-                csi.setTagList(new String[]{"uchicago","cs","edu","educate yo self"});
-            }
-            result.add(csi);
-        }
+        });
         return result;
     }
 

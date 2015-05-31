@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 
@@ -47,8 +48,11 @@ public class MainLocationTab extends Fragment {
         final View view = inflater.inflate(R.layout.main_location_tab_content, container, false);
         final FragmentActivity mFragmentActivity = getActivity();
         final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.location_content_recycler);
+        final RecyclerView userRecyclerView = (RecyclerView) getActivity().findViewById(R.id.user_content_recycler);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(mFragmentActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        getCurrentLocation();
 
         final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(generateLocalData(3));
         mRecyclerView.setAdapter(mAdapter);
@@ -86,20 +90,26 @@ public class MainLocationTab extends Fragment {
                         return false;
                     }
                     @Override
-                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         Log.w("swipeRecyclerView", "Left");
                         AdapterStoryRecycler updatedAdapter = (AdapterStoryRecycler) recyclerView.getAdapter();
+                        UserStoryDb userDb = MainUserTab.getUserDb();
                         for (int position : reverseSortedPositions) {
                             Log.w("SwipeableRecyclerViewTouchListener " + String.valueOf(position), String.valueOf(position));
                             ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
-                            //updatedAdapter.notifyItemRemoved(position);
+                            userDb.createStory(swipedStory);
+                            updatedAdapter = new AdapterStoryRecycler(userDb.getAllStories());
+                            userRecyclerView.setAdapter(updatedAdapter);
+                            Toast.makeText(getActivity(), swipedStory.getTitle() +" has been added to your queue",Toast.LENGTH_SHORT).show();
                         }
                         getCurrentLocation(); //TODO: remove this when i have a better solution
-                        //updatedAdapter.notifyDataSetChanged();
+
+                        //TODO: what should we do with the swiped story? put it on top? put it on bottom? should the effect be global or user specific?
+                        updatedAdapter.notifyDataSetChanged();
                         return;
                     }
                     @Override
-                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         Log.w("swipeRecyclerView", "Right");
                     }
                 });
@@ -114,36 +124,6 @@ public class MainLocationTab extends Fragment {
         //getCurrentLocation();
         List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
         result = getLocationStories(40, 40, 200);
-//        java.util.Date date= new java.util.Date();
-//        long currentTime = date.getTime();
-//        for (int i=1; i <= size; i++) {
-//            ClassStoryInfo csi = new ClassStoryInfo();
-//            if (i % 3 == 0) {
-//                csi.setType("tip");
-//                csi.setTitle("This is tip number " + (i/3));
-//                csi.setContent("You shouldn't be able to see this!!1!");
-//                csi.setTimestamp(currentTime);
-//                csi.setOriginalPoster("The Quokka In The Sky");
-//                csi.setTagList(new String[]{"tweet","tweet","imma bird"});
-//            }
-//            else if (i % 3 == 1) {
-//                csi.setType("longform");
-//                csi.setTitle("This is longform number " + (i / 3));
-//                csi.setContent(getString(R.string.filler_text));
-//                csi.setTimestamp(currentTime);
-//                csi.setOriginalPoster("The Quokka In The Sky");
-//                csi.setTagList(new String[]{"Latin filler","blag","quokka"});
-//            }
-//            else{
-//                csi.setType("link");
-//                csi.setTitle("This is link number " + (i / 3));
-//                csi.setContent("https://cs.uchicago.edu");
-//                csi.setTimestamp(currentTime);
-//                csi.setOriginalPoster("The Quokka In The Sky");
-//                csi.setTagList(new String[]{"uchicago","cs","edu","educate yo self"});
-//            }
-//            result.add(csi);
-//        }
         return result;
     }
 
@@ -277,16 +257,12 @@ public class MainLocationTab extends Fragment {
     }
 
     public void getCurrentLocation(){
+        Log.w("getCurrentLocation","start...");
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (currentLocationInfo == null) {
             Log.w("currentLocationInfo","creating mLocationListener");
             currentLocationInfo = new ClassLocationInfo();
-            currentLocationInfo.setLocationId(0);
-            currentLocationInfo.setLocationObject(null);
-            currentLocationInfo.setLatitude(-1);
-            currentLocationInfo.setLongitude(-1);
-            currentLocationInfo.setLocationName("Waiting for Location");
-            currentLocationInfo.setRadius(LOCATION_QUEUE_RADIUS);
+            ClassLocationInfo.init(currentLocationInfo);
             updateLocationHeader();
             mLocationListener = new LocationListener() {
                 public void onLocationChanged(Location loc){
@@ -327,10 +303,12 @@ public class MainLocationTab extends Fragment {
             updateLocationHeader();
 
         }
+        Log.w("getCurrentLocation","end...");
 
     }
 
     public static ClassLocationInfo getcurrentLocationInfo(){
+        Log.w("gCLI Lat:",String.valueOf(currentLocationInfo.getLatitude()));
         return currentLocationInfo;
     }
 

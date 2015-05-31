@@ -60,5 +60,14 @@ public class ClassLocationInfo {
         this.locationObject = newLocationObject;
     }
 
+    public static void init(ClassLocationInfo loc){
+        loc.setLocationId(0);
+        loc.setLocationObject(null);
+        loc.setLatitude(-1);
+        loc.setLongitude(-1);
+        loc.setLocationName("Waiting for Location");
+        loc.setRadius(5.0);
+    }
+
 
 }

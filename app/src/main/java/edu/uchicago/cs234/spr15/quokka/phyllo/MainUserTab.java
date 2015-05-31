@@ -27,7 +27,7 @@ import java.sql.SQLException;
 public class MainUserTab extends Fragment {
 
     private DrawerLayout mDrawerLayout;
-    private UserStoryDb userDb;
+    private static UserStoryDb userDb;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.main_user_tab_content, container, false);
@@ -85,14 +85,17 @@ public class MainUserTab extends Fragment {
                         return true;
                     }
 
+                    //////////
+                    //TODO: onDismissedSwipeRight and onDismissedSwipeLeft are backwards. i'll fix this when i have time
+                    //////////
                     @Override
-                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         Log.w("swipeRecyclerView","Left");
                         return;
                     }
 
                     @Override
-                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         Log.w("swipeRecyclerView", "Right");
                         AdapterStoryRecycler updatedAdapter = (AdapterStoryRecycler) recyclerView.getAdapter();
                         for (int position : reverseSortedPositions) {
@@ -138,6 +141,10 @@ public class MainUserTab extends Fragment {
             }
         });
         return view;
+    }
+
+    public static UserStoryDb getUserDb(){
+        return userDb;
     }
 
 }

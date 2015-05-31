@@ -54,6 +54,23 @@ public class UserStoryDb {
         //return newStory;
     }
 
+    public void createStory(ClassStoryInfo story) {
+        ContentValues values = new ContentValues();
+        values.put(UserDbHelper.COLUMN_STORY_TYPE, story.getType());
+        values.put(UserDbHelper.COLUMN_STORY_TITLE, story.getTitle());
+        values.put(UserDbHelper.COLUMN_STORY_CONTENT, story.getContent());
+        values.put(UserDbHelper.COLUMN_STORY_TIMESTAMP, story.getTimestamp());
+        values.put(UserDbHelper.COLUMN_STORY_POSTER, story.getOriginalPoster());
+        values.put(UserDbHelper.COLUMN_STORY_LATITUDE, story.getLatitude());
+        values.put(UserDbHelper.COLUMN_STORY_LONGITUDE, story.getLongitude());
+        values.put(UserDbHelper.COLUMN_STORY_TAGS, convertArrayToString(story.getTagList()));
+        long insertId = database.insert(UserDbHelper.TABLE_NAME, null, values);
+        Cursor cursor = database.query(UserDbHelper.TABLE_NAME, allColumns, UserDbHelper.COLUMN_STORY_ID + " = " + insertId, null, null, null, null);
+        //Story newStory = cursorToStory(cursor);
+        cursor.close();
+        //return newStory;
+    }
+
     public void deleteStory(ClassStoryInfo story) {
         long id = story.getStoryID();
 //        long timestamp = story.getTimestamp();
@@ -96,11 +113,13 @@ public class UserStoryDb {
     public static String strSeparator = "__,__";
     public static String convertArrayToString(String[] array){
         String str = "";
-        for (int i = 0; i < array.length; i++) {
-            str = str + array[i];
-            // Do not append comma at the end of last element
-            if(i < array.length - 1){
-                str = str + strSeparator;
+        if (array != null) {
+            for (int i = 0; i < array.length; i++) {
+                str = str + array[i];
+                // Do not append comma at the end of last element
+                if (i < array.length - 1) {
+                    str = str + strSeparator;
+                }
             }
         }
         return str;

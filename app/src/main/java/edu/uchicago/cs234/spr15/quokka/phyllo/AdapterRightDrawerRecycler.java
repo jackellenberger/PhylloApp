@@ -95,6 +95,8 @@ public class AdapterRightDrawerRecycler extends RecyclerView.Adapter<AdapterRigh
 
             ViewHolder vhHeader = new ViewHolder(headerView,viewType); //Creating ViewHolder and passing the object of type view
 
+
+
             return vhHeader; //returning the object created
 
 
@@ -114,7 +116,6 @@ public class AdapterRightDrawerRecycler extends RecyclerView.Adapter<AdapterRigh
             holder.imageView.setImageResource(mIcons[position -1]);// Settimg the image with array of our icons
         }
         else{
-
             holder.locationName.setText(location);
         }
     }
@@ -140,10 +141,10 @@ public class AdapterRightDrawerRecycler extends RecyclerView.Adapter<AdapterRigh
     }
 
     public void setHeaderText(double lat, double lon, String name){
-        TextView headerLat = (TextView) headerView.findViewById(R.id.location_header_lat);
-        TextView headerLon = (TextView) headerView.findViewById(R.id.location_header_lon);
-        TextView headerLocationName = (TextView) headerView.findViewById(R.id.location_header_text);
         if (headerView != null) { //TODO: find a better solution than this
+            TextView headerLat = (TextView) headerView.findViewById(R.id.location_header_lat);
+            TextView headerLon = (TextView) headerView.findViewById(R.id.location_header_lon);
+            TextView headerLocationName = (TextView) headerView.findViewById(R.id.location_header_text);
             if (lat == -1 || lon == -1){
                 headerLat.setText("Waiting for Location");
                 headerLon.setText("Waiting for Location");
@@ -154,5 +155,6 @@ public class AdapterRightDrawerRecycler extends RecyclerView.Adapter<AdapterRigh
             }
             headerLocationName.setText(name);
         }
+        else {Log.w("headerView","does not exist");}
     }
 }

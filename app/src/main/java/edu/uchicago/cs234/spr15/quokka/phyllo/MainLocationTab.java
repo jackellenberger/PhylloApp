@@ -62,6 +62,7 @@ public class MainLocationTab extends Fragment {
         //final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(getLocationStories(currentLocationInfo.getLatitude(),currentLocationInfo.getLongitude(),currentLocationInfo.getRadius()));
         final AdapterStoryRecycler mAdapter = new AdapterStoryRecycler(getLocationStories(40,40,200));
         mRecyclerView.setAdapter(mAdapter);
+        Log.w("firstRV itemCount",String.valueOf(mRecyclerView.getAdapter().getItemCount()));
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             private float x1, x2temp;
 
@@ -231,6 +232,9 @@ public class MainLocationTab extends Fragment {
                     s.setTimestamp(time.getTime());
                     result.add(s);
                 }
+                AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(result);
+                mRecyclerView.setAdapter(updatedAdapter);
+                updatedAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -238,7 +242,6 @@ public class MainLocationTab extends Fragment {
                 Log.d("failed", error.getMessage());
             }
         });
-
         return result;
     }
 
@@ -321,10 +324,10 @@ public class MainLocationTab extends Fragment {
         if (mRecyclerView != null) {
             //getCurrentLocation();
             //AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(getLocationStories(currentLocationInfo.getLatitude(),currentLocationInfo.getLongitude(), currentLocationInfo.getRadius()));
-            List<ClassStoryInfo> newStories = getLocationStories(40,40,200);
-            AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(newStories);
-            mRecyclerView.setAdapter(updatedAdapter);
-            updatedAdapter.notifyDataSetChanged();
+            getLocationStories(40,40,200);
+            //AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(newStories);
+            //mRecyclerView.setAdapter(updatedAdapter);
+            //updatedAdapter.notifyDataSetChanged();
         }
     }
 

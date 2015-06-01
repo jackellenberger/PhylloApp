@@ -91,17 +91,14 @@ public class MainUserTab extends Fragment {
                         return true;
                     }
 
-                    //////////
-                    //TODO: onDismissedSwipeRight and onDismissedSwipeLeft are backwards. i'll fix this when i have time
-                    //////////
                     @Override
-                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         Log.w("swipeRecyclerView","Left");
                         return;
                     }
 
                     @Override
-                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         Log.w("swipeRecyclerView", "Right");
                         AdapterStoryRecycler updatedAdapter = (AdapterStoryRecycler) recyclerView.getAdapter();
                         for (int position : reverseSortedPositions) {

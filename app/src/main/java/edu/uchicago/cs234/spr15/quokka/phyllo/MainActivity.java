@@ -24,12 +24,8 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
-    //TODO: Implement Floating Action Button
     //TODO: Implement hiding tab bar
-    //TODO: Implement clickable animation on right hamburger, cards
     //TODO: when longform cards are clicked open in new fragment
-    //TODO: Comments????
-    //TODO: implement swiping cards
 
     //TOOLBAR / APPBAR
     private Toolbar toolbar;

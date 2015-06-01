@@ -97,7 +97,7 @@ public class MainLocationTab extends Fragment {
                         return false;
                     }
                     @Override
-                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         Log.w("swipeRecyclerView", "Left");
                         AdapterStoryRecycler updatedAdapter = (AdapterStoryRecycler) recyclerView.getAdapter();
                         UserStoryDb userDb = MainUserTab.getUserDb();
@@ -116,7 +116,7 @@ public class MainLocationTab extends Fragment {
                         return;
                     }
                     @Override
-                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         Log.w("swipeRecyclerView", "Right");
                     }
                 });

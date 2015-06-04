@@ -312,6 +312,9 @@ public class MainActivity extends ActionBarActivity {
     public void onTouchLeftDrawer(final int position) {
         //{"Statistics","Reputation","Edit User","Logout","Settings","Feedback"}
         switch (position) {
+            case 0:
+                openFragment(new FragmentLogIn());
+                break;
             case 1:
                 openFragment(new FragmentUserStatistics());
                 break;

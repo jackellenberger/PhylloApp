@@ -313,7 +313,9 @@ public class MainActivity extends ActionBarActivity {
         //{"Statistics","Reputation","Edit User","Logout","Settings","Feedback"}
         switch (position) {
             case 0:
-                openFragment(new FragmentLogIn());
+                if (FragmentLogIn.getCurrentUser().getUserName() == null) {
+                    openFragment(new FragmentLogIn());
+                }
                 break;
             case 1:
                 openFragment(new FragmentUserStatistics());
@@ -325,8 +327,13 @@ public class MainActivity extends ActionBarActivity {
                 openFragment(new FragmentUserEdit());
                 break;
             case 4:
-                //TODO: LOGOUT ACTION
-                Toast.makeText(MainActivity.this, "Logged Out. JK TODO", Toast.LENGTH_SHORT).show();
+                if (FragmentLogIn.getCurrentUser().getUserName() != null) {
+                    FragmentLogIn.logOutUser();
+                    Toast.makeText(MainActivity.this, "You Have Been Logged Out.", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Please Log In Before You Log Out, Dummy", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case 5:
                 openFragment(new FragmentAppSettings());

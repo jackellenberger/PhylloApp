@@ -22,6 +22,7 @@ public class AdapterLeftDrawerRecycler extends RecyclerView.Adapter<AdapterLeftD
     private String name;        //String Resource for header View Name
     private int profile;        //int Resource for header view profile picture
     private String email;       //String Resource for header view email 
+    private static View headerView;
 
 
     // Creating a ViewHolder which extends the RecyclerView View Holder
@@ -97,9 +98,9 @@ public class AdapterLeftDrawerRecycler extends RecyclerView.Adapter<AdapterLeftD
 
         } else if (viewType == TYPE_HEADER) {
 
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.drawerutil_user_drawer_header,parent,false); //Inflating the layout
+            headerView = LayoutInflater.from(parent.getContext()).inflate(R.layout.drawerutil_user_drawer_header,parent,false); //Inflating the layout
 
-            ViewHolder vhHeader = new ViewHolder(v,viewType); //Creating ViewHolder and passing the object of type view
+            ViewHolder vhHeader = new ViewHolder(headerView,viewType); //Creating ViewHolder and passing the object of type view
 
             return vhHeader; //returning the object created
 
@@ -120,7 +121,9 @@ public class AdapterLeftDrawerRecycler extends RecyclerView.Adapter<AdapterLeftD
             holder.imageView.setImageResource(mIcons[position -1]);// Settimg the image with array of our icons
         }
         else{
-
+            ClassUserInfo currentUser = FragmentLogIn.getCurrentUser();
+            name = (currentUser.getUserName() != null) ? currentUser.getUserName() : "Sign In";
+            email = (currentUser.getEmailAddress() != null) ? currentUser.getEmailAddress() : "quokka@uchicago.edu";
             holder.profile.setImageResource(profile);           // Similarly we set the resources for header view
             holder.Name.setText(name);
             holder.email.setText(email);
@@ -147,4 +150,13 @@ public class AdapterLeftDrawerRecycler extends RecyclerView.Adapter<AdapterLeftD
         return position == 0;
     }
 
+    public static void setUserHeaderText(ClassUserInfo user){
+        if (headerView != null) {
+            TextView userName = (TextView) headerView.findViewById(R.id.user_name);
+            TextView emailAddress = (TextView) headerView.findViewById(R.id.user_email);
+
+            userName.setText((user.getUserName() != null) ? user.getUserName() : "Sign In");
+            emailAddress.setText((user.getEmailAddress() != null) ? user.getEmailAddress() : "quokka@uchicago.edu");
+        }
+    }
 }

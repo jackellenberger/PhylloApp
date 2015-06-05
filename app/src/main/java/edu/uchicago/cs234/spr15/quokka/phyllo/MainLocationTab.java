@@ -332,9 +332,9 @@ public class MainLocationTab extends Fragment {
     }
 
     private static void updateLocationHeader() {
-        RecyclerView mRightDrawer = (RecyclerView) activity.findViewById(R.id.right_RecyclerView);
-        AdapterRightDrawerRecycler mRightDrawerAdapter = (AdapterRightDrawerRecycler) mRightDrawer.getAdapter();
-        mRightDrawerAdapter.setHeaderText(currentLocationInfo.getLatitude(),
+        //RecyclerView mRightDrawer = (RecyclerView) activity.findViewById(R.id.right_RecyclerView);
+        //AdapterRightDrawerRecycler mRightDrawerAdapter = (AdapterRightDrawerRecycler) mRightDrawer.getAdapter();
+        AdapterRightDrawerRecycler.setHeaderText(currentLocationInfo.getLatitude(),
                                           currentLocationInfo.getLongitude(),
                                           String.valueOf(currentLocationInfo.getLocationName()));
     }

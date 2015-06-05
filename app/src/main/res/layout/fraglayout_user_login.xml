@@ -66,16 +66,16 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="32dp"
-            android:background="@color/primaryColorDark"
-            android:textColor="@color/primary_material_light"
+            android:background="@drawable/login_screen_button"
+            android:textColor="#fafafa"
             android:text="Sign In"/>
         <Button
             android:id="@+id/new_user_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="@color/primaryColorDark"
-            android:textColor="@color/primary_material_light"
+            android:background="@drawable/login_screen_button"
+            android:textColor="#fafafa"
             android:text="New User"/>
         <ImageView
             android:layout_width="fill_parent"

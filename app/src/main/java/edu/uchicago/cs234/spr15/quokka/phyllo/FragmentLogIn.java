@@ -33,13 +33,9 @@ public class FragmentLogIn extends Fragment {
             public void onClick(View v) {
                 ClassUserInfo loginAttemptUser = fieldsToUserInfo();
                 boolean didSignIn = logIn(loginAttemptUser);
-                if (didSignIn){
-                    currentUser = loginAttemptUser;
-                    DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
-                else{
+                if (didSignIn) {
+                    onLoginSuccess(loginAttemptUser);
+                } else {
                     TextView loginFailure = (TextView) inflatedView.findViewById(R.id.login_failure_text);
                     loginFailure.setVisibility(View.VISIBLE);
                     passwordField.setText("");
@@ -52,13 +48,9 @@ public class FragmentLogIn extends Fragment {
             public void onClick(View v) {
                 ClassUserInfo creationAttemptUser = fieldsToUserInfo();
                 boolean userWasCreated = createNewUser(creationAttemptUser);
-                if (userWasCreated){
-                    currentUser = creationAttemptUser;
-                    DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
-                else{
+                if (userWasCreated) {
+                    onLoginSuccess(creationAttemptUser);
+                } else {
                     TextView newUserFailure = (TextView) inflatedView.findViewById(R.id.new_user_failure_text);
                     newUserFailure.setVisibility(View.VISIBLE);
                     usernameField.setText("");
@@ -69,6 +61,13 @@ public class FragmentLogIn extends Fragment {
         return inflatedView;
     }
 
+    private void onLoginSuccess(ClassUserInfo user){
+        currentUser = user;
+        AdapterLeftDrawerRecycler.setUserHeaderText(currentUser);
+        DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
     private ClassUserInfo fieldsToUserInfo(){
         ClassUserInfo enteredInfo = new ClassUserInfo();
         enteredInfo.setUserName(usernameField.getText().toString());
@@ -77,7 +76,12 @@ public class FragmentLogIn extends Fragment {
     }
 
     public static ClassUserInfo getCurrentUser(){
-        return currentUser;
+        if (currentUser != null) {
+            return currentUser;
+        }
+        else{
+            return new ClassUserInfo();
+        }
     }
 
     private boolean logIn(ClassUserInfo userInfo){
@@ -99,5 +103,10 @@ public class FragmentLogIn extends Fragment {
         UserStoryDb userDB = MainUserTab.getUserDb();
         return new String[] {};
         //TODO: find all tags associated with user
+    }
+
+    public static void logOutUser(){
+        currentUser = new ClassUserInfo();
+        AdapterLeftDrawerRecycler.setUserHeaderText(currentUser);
     }
 }

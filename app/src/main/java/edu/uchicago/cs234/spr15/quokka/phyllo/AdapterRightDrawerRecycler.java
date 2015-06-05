@@ -21,7 +21,7 @@ public class AdapterRightDrawerRecycler extends RecyclerView.Adapter<AdapterRigh
     private int mIcons[];       // Int Array to store the passed icons resource value from MainActivity.java
 
     private String location;        //String Resource for header View Name
-    private View headerView;
+    private static View headerView;
 
 
     // Creating a ViewHolder which extends the RecyclerView View Holder
@@ -140,7 +140,7 @@ public class AdapterRightDrawerRecycler extends RecyclerView.Adapter<AdapterRigh
         return position == 0;
     }
 
-    public void setHeaderText(double lat, double lon, String name){
+    public static void setHeaderText(double lat, double lon, String name){
         if (headerView != null) { //TODO: find a better solution than this
             TextView headerLat = (TextView) headerView.findViewById(R.id.location_header_lat);
             TextView headerLon = (TextView) headerView.findViewById(R.id.location_header_lon);

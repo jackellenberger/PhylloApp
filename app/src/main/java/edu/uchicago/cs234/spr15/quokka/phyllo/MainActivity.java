@@ -76,7 +76,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.main_activity);
 
         // LOCAL DATABASE
-        this.deleteDatabase("localUserQueue.db"); // To recreate the db each time for now
+        //this.deleteDatabase("localUserQueue.db"); // To recreate the db each time for now
         userDb = new UserStoryDb(this);
         try {
             userDb.open();
@@ -89,9 +89,9 @@ public class MainActivity extends ActionBarActivity {
         Date date= new Date();
         long time = date.getTime();
         Timestamp ts = new Timestamp(time);
-        userDb.createStory("tip", "This is tip number 1", "", ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"one"});
-        userDb.createStory("longform", "This is longform number 1", getString(R.string.filler_text), ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"two"});
-        userDb.createStory("url", "This is link number 1", "https://cs.uchicago.edu", ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"three"});
+        //userDb.createStory("tip", "This is tip number 1", "", ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"one"});
+        //userDb.createStory("longform", "This is longform number 1", getString(R.string.filler_text), ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"two"});
+        //userDb.createStory("url", "This is link number 1", "https://cs.uchicago.edu", ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"three"});
         List<ClassStoryInfo> stories = userDb.getAllStories();
         for (ClassStoryInfo s : stories) {
             Log.d("Story information:", s.toString());

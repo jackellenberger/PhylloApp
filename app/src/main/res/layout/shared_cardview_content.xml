@@ -60,7 +60,7 @@
                 android:textSize="14sp"/>
             <!-- overflow -->
             <ImageButton
-                android:id="@+id/card_share"
+                android:id="@+id/card_overflow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
@@ -69,7 +69,8 @@
                 android:background="#00000000"
                 android:clickable="true"
                 android:src="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha"
-                android:rotation="90" />
+                android:rotation="90">
+            </ImageButton>
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

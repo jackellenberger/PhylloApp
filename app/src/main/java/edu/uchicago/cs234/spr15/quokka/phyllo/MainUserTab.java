@@ -109,6 +109,7 @@ public class MainUserTab extends Fragment {
                                 Toast.makeText(getActivity(),"Please find a location to post to", Toast.LENGTH_LONG).show();
                                 return;
                             }
+
                             swipedStory.setLatitude(cli.getLatitude());
                             swipedStory.setLongitude(cli.getLongitude());
 
@@ -148,6 +149,8 @@ public class MainUserTab extends Fragment {
     public static UserStoryDb getUserDb(){
         return userDb;
     }
+
+    public static RecyclerView getmRecyclerView() { return mRecyclerView; }
 
     public static void refreshUserRecycler() {
         if (mRecyclerView != null) {

@@ -103,6 +103,7 @@ public class MainLocationTab extends Fragment {
                         UserStoryDb userDb = MainUserTab.getUserDb();
                         for (int position : reverseSortedPositions) {
                             Log.w("SwipeableRecyclerViewTouchListener " + String.valueOf(position), String.valueOf(position));
+                            mRecyclerView.getAdapter().notifyItemInserted(position);
                             ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
                             userDb.createStory(swipedStory);
                             updatedAdapter = new AdapterStoryRecycler(userDb.getAllStories());

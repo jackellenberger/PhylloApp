@@ -2,14 +2,20 @@ package edu.uchicago.cs234.spr15.quokka.phyllo;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wefika.flowlayout.FlowLayout;
 
@@ -35,6 +41,7 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
         protected TextView vSubTitle;
         protected FlowLayout vTags; //RecyclerView in the future?? ListView??
         protected TextView vContent;
+        protected ImageButton vOverflow;
 
         public StoryViewHolder(View v) {
             super(v);
@@ -43,6 +50,7 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
             vSubTitle = (TextView) v.findViewById(R.id.card_subtitle);
             vTags = (FlowLayout) v.findViewById(R.id.tag_flow_layout);
             vContent = (TextView) v.findViewById(R.id.card_content);
+            vOverflow = (ImageButton) v.findViewById(R.id.card_overflow);
         }
     }
 
@@ -56,23 +64,25 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
     }
 
     @Override
-    public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {
+    public void onBindViewHolder(final StoryViewHolder storyViewHolder, int i) {
         ClassStoryInfo csi = storyInfoList.get(i);
         storyViewHolder.vTitle.setText(csi.getTitle());
         Timestamp ts = new Timestamp(csi.getTimestamp());
-        storyViewHolder.vSubTitle.setText("From "+csi.getOriginalPoster()+" on "+ ts.toString().split("\\.")[0]);
+        storyViewHolder.vSubTitle.setText("From " + csi.getOriginalPoster() + " on " + ts.toString().split("\\.")[0]);
 
         String[] tags = csi.getTagList();
-        int tagNum = 0;
+
         //dp to px conversion
         Resources r = viewContext.getContext().getResources();
         int px2 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, r.getDisplayMetrics());
         int px4 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, r.getDisplayMetrics());
         int px8 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, r.getDisplayMetrics());
 
-        if (tags != null) {
+        if (tags != null && storyViewHolder.vTags.getChildCount() == 0) {
+            int tagNum = 0;
             for (String tag : tags) {
-                TextView newView = new TextView(viewContext.getContext());
+                Log.w("Writing Tags",storyViewHolder.vTitle.getText() + " " + tag);
+                TextView newView = new TextView(storyViewHolder.vTags.getContext());
                 FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
@@ -99,6 +109,34 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
             storyViewHolder.vContent.setAutoLinkMask(1);
             storyViewHolder.vContent.setMovementMethod(LinkMovementMethod.getInstance());
         }
+
+        //Overflow button menu
+        final PopupMenu mPopupMenu = new PopupMenu(viewContext.getContext(), storyViewHolder.vOverflow);
+        MenuInflater menuInflater = mPopupMenu.getMenuInflater();
+        menuInflater.inflate(R.menu.menulayout_card_overflow, mPopupMenu.getMenu());
+        storyViewHolder.vOverflow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupMenu.show();
+            }
+        });
+        mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.card_overflow_delete:
+                        int pos = storyViewHolder.getPosition();
+                        MainUserTab.getUserDb().deleteStory(storyInfoList.get(pos));
+                        MainUserTab.getmRecyclerView().getAdapter().notifyItemRemoved(pos);
+                        break;
+                    case R.id.card_overflow_share:
+                        Toast.makeText(viewContext.getContext(),"Traitor",Toast.LENGTH_SHORT);
+                        //TODO:implement sharing
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override

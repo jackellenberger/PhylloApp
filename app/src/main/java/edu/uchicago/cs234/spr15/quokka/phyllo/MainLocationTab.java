@@ -39,7 +39,7 @@ public class MainLocationTab extends Fragment {
 
     private View myView;
     private DrawerLayout mDrawerLayout;
-    private static double LOCATION_QUEUE_RADIUS = 500.0; //TODO: what is the location queue radisu supposed to be?
+    private static double LOCATION_QUEUE_RADIUS = 50.0; //TODO: what is the location queue radisu supposed to be?
     private static ClassLocationInfo currentLocationInfo;
     private static LocationListener mLocationListener;
     private static RecyclerView mRecyclerView;
@@ -323,12 +323,12 @@ public class MainLocationTab extends Fragment {
 
     public static void refreshLocationRecycler() {
         if (mRecyclerView != null) {
-            //getCurrentLocation();
-            //AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(getLocationStories(currentLocationInfo.getLatitude(),currentLocationInfo.getLongitude(), currentLocationInfo.getRadius()));
-            getLocationStories(40,40,200);
+            getCurrentLocation();
+            AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(getLocationStories(currentLocationInfo.getLatitude(),currentLocationInfo.getLongitude(), LOCATION_QUEUE_RADIUS));
+            //getLocationStories(40,40,200);
             //AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(newStories);
-            //mRecyclerView.setAdapter(updatedAdapter);
-            //updatedAdapter.notifyDataSetChanged();
+            mRecyclerView.setAdapter(updatedAdapter);
+            updatedAdapter.notifyDataSetChanged();
         }
     }
 

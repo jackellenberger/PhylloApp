@@ -128,9 +128,10 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
                         int pos = storyViewHolder.getPosition();
                         MainUserTab.getUserDb().deleteStory(storyInfoList.get(pos));
                         MainUserTab.getmRecyclerView().getAdapter().notifyItemRemoved(pos);
+                        MainUserTab.getmRecyclerView().getAdapter().notifyDataSetChanged();
                         break;
                     case R.id.card_overflow_share:
-                        Toast.makeText(viewContext.getContext(),"Traitor",Toast.LENGTH_SHORT);
+                        Toast.makeText(viewContext.getContext(),"Traitor",Toast.LENGTH_SHORT).show();
                         //TODO:implement sharing
                         break;
                 }

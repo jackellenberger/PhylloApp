@@ -3,12 +3,24 @@ package edu.uchicago.cs234.spr15.quokka.phyllo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.http.Body;
+import retrofit.http.POST;
 
 /**
  * Created by jellenberger on 6/3/15.
@@ -32,14 +44,14 @@ public class FragmentLogIn extends Fragment {
             @Override
             public void onClick(View v) {
                 ClassUserInfo loginAttemptUser = fieldsToUserInfo();
-                boolean didSignIn = logIn(loginAttemptUser);
-                if (didSignIn) {
-                    onLoginSuccess(loginAttemptUser);
-                } else {
-                    TextView loginFailure = (TextView) inflatedView.findViewById(R.id.login_failure_text);
-                    loginFailure.setVisibility(View.VISIBLE);
-                    passwordField.setText("");
-                }
+                logIn(loginAttemptUser);
+//                if (didSignIn) {
+//                    onLoginSuccess(loginAttemptUser);
+//                } else {
+//                    TextView loginFailure = (TextView) inflatedView.findViewById(R.id.login_failure_text);
+//                    loginFailure.setVisibility(View.VISIBLE);
+//                    passwordField.setText("");
+//                }
             }
         });
 
@@ -47,14 +59,14 @@ public class FragmentLogIn extends Fragment {
             @Override
             public void onClick(View v) {
                 ClassUserInfo creationAttemptUser = fieldsToUserInfo();
-                boolean userWasCreated = createNewUser(creationAttemptUser);
-                if (userWasCreated) {
-                    onLoginSuccess(creationAttemptUser);
-                } else {
-                    TextView newUserFailure = (TextView) inflatedView.findViewById(R.id.new_user_failure_text);
-                    newUserFailure.setVisibility(View.VISIBLE);
-                    usernameField.setText("");
-                }
+                createNewUser(creationAttemptUser);
+//                if (userWasCreated) {
+//                    onLoginSuccess(creationAttemptUser);
+//                } else {
+//                    TextView newUserFailure = (TextView) inflatedView.findViewById(R.id.new_user_failure_text);
+//                    newUserFailure.setVisibility(View.VISIBLE);
+//                    usernameField.setText("");
+//                }
             }
         });
 
@@ -84,13 +96,63 @@ public class FragmentLogIn extends Fragment {
         }
     }
 
-    private boolean logIn(ClassUserInfo userInfo){
-        return true;
-        //TODO: check credentials
+    private static final String API_URL = "https://floating-wildwood-9614.herokuapp.com";
+
+    public interface LogInService {
+        @POST("/users/new")
+        public void createUser(@Body ClassUserInfo user, Callback<String> str);
+
+        @POST("/users/login")
+        public void userLogin(@Body ClassUserInfo user, Callback<String> str);
     }
-    private boolean createNewUser(ClassUserInfo userInfo){
-        return true;
-        //TODO: create new user
+
+    private void logIn(final ClassUserInfo userInfo){
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(API_URL)
+                .build();
+        LogInService service = restAdapter.create(LogInService.class);
+        service.userLogin(userInfo, new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.d("User logged in!", s);
+                onLoginSuccess(userInfo);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("Login failed", error.getMessage());
+                TextView loginFailure = (TextView) inflatedView.findViewById(R.id.login_failure_text);
+                loginFailure.setVisibility(View.VISIBLE);
+                passwordField.setText("");
+            }
+        });
+        return;
+    }
+
+
+    private void createNewUser(final ClassUserInfo userInfo) {
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(API_URL)
+                .build();
+        LogInService service = restAdapter.create(LogInService.class);
+        service.createUser(userInfo, new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+                Log.d("User created!", s);
+                onLoginSuccess(userInfo);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("Failed", error.getMessage());
+                TextView newUserFailure = (TextView) inflatedView.findViewById(R.id.new_user_failure_text);
+                newUserFailure.setVisibility(View.VISIBLE);
+                usernameField.setText("");
+            }
+        });
+        return;
     }
 
     public static void populateUserTags(ClassUserInfo user){
@@ -101,8 +163,18 @@ public class FragmentLogIn extends Fragment {
 
     private static String[] queryDBforTags(String username){
         UserStoryDb userDB = MainUserTab.getUserDb();
-        return new String[] {};
-        //TODO: find all tags associated with user
+        Set<String> result = new HashSet<String>();
+        List<ClassStoryInfo> stories = userDB.getAllStories();
+        for (int i = 0; i < stories.size(); i++) {
+            ClassStoryInfo story = stories.get(i);
+            String[] tags = story.getTagList();
+            for (int j = 0; j < tags.length; i++) {
+                result.add(tags[j]);
+            }
+        }
+        String[] res = new String[result.size()];
+        res = result.toArray(res);
+        return res;
     }
 
     public static void logOutUser(){

@@ -203,13 +203,13 @@ public class MainLocationTab extends Fragment {
         public void sendStory(@Body ClassStoryInfo story, Callback<String> str);
 
         @GET("/stories/{longitude}/{latitude}/{radius}")
-        public void getLocationStories(@Path("longitude") long longitude,
-                                       @Path("latitude") long latitude, @Path("radius") long radius,
+        public void getLocationStories(@Path("longitude") double longitude,
+                                       @Path("latitude") double latitude, @Path("radius") double radius,
                                        Callback<List<TempStory>> stories);
 
     }
 
-    public static List<ClassStoryInfo> getLocationStories(long longitude, long latitude, long radius) {
+    public static List<ClassStoryInfo> getLocationStories(double longitude, double latitude, double radius) {
         final List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)

@@ -45,13 +45,6 @@ public class FragmentLogIn extends Fragment {
             public void onClick(View v) {
                 ClassUserInfo loginAttemptUser = fieldsToUserInfo();
                 logIn(loginAttemptUser);
-//                if (didSignIn) {
-//                    onLoginSuccess(loginAttemptUser);
-//                } else {
-//                    TextView loginFailure = (TextView) inflatedView.findViewById(R.id.login_failure_text);
-//                    loginFailure.setVisibility(View.VISIBLE);
-//                    passwordField.setText("");
-//                }
             }
         });
 
@@ -60,13 +53,6 @@ public class FragmentLogIn extends Fragment {
             public void onClick(View v) {
                 ClassUserInfo creationAttemptUser = fieldsToUserInfo();
                 createNewUser(creationAttemptUser);
-//                if (userWasCreated) {
-//                    onLoginSuccess(creationAttemptUser);
-//                } else {
-//                    TextView newUserFailure = (TextView) inflatedView.findViewById(R.id.new_user_failure_text);
-//                    newUserFailure.setVisibility(View.VISIBLE);
-//                    usernameField.setText("");
-//                }
             }
         });
 

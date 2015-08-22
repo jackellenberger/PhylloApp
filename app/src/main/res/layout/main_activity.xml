@@ -44,7 +44,7 @@
         android:orientation="vertical"
         android:id="@+id/left_drawer"
         android:background="@color/background_material_light"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice" >
@@ -65,7 +65,7 @@
     <RelativeLayout
         android:orientation="vertical"
         android:id="@+id/right_drawer"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:choiceMode="singleChoice" >

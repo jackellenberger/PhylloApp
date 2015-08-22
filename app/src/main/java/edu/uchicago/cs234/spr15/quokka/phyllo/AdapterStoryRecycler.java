@@ -71,6 +71,7 @@ public class AdapterStoryRecycler extends RecyclerView.Adapter<AdapterStoryRecyc
         int px8 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, r.getDisplayMetrics());
 
         if (tags != null) {
+            storyViewHolder.vTags.removeAllViews();
             for (String tag : tags) {
                 TextView newView = new TextView(viewContext.getContext());
                 FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(

@@ -24,12 +24,8 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
-    //TODO: Implement Floating Action Button
     //TODO: Implement hiding tab bar
-    //TODO: Implement clickable animation on right hamburger, cards
     //TODO: when longform cards are clicked open in new fragment
-    //TODO: Comments????
-    //TODO: implement swiping cards
 
     //TOOLBAR / APPBAR
     private Toolbar toolbar;
@@ -80,7 +76,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.main_activity);
 
         // LOCAL DATABASE
-        this.deleteDatabase("localUserQueue.db"); // To recreate the db each time for now
+        //this.deleteDatabase("localUserQueue.db"); // To recreate the db each time for now
         userDb = new UserStoryDb(this);
         try {
             userDb.open();
@@ -93,9 +89,9 @@ public class MainActivity extends ActionBarActivity {
         Date date= new Date();
         long time = date.getTime();
         Timestamp ts = new Timestamp(time);
-        userDb.createStory("tip", "This is tip number 1", "", ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"one"});
-        userDb.createStory("longform", "This is longform number 1", getString(R.string.filler_text), ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"two"});
-        userDb.createStory("url", "This is link number 1", "https://cs.uchicago.edu", ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"three"});
+        //userDb.createStory("tip", "This is tip number 1", "", ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"one"});
+        //userDb.createStory("longform", "This is longform number 1", getString(R.string.filler_text), ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"two"});
+        //userDb.createStory("url", "This is link number 1", "https://cs.uchicago.edu", ts.getTime(), "The Quokka in the Sky", -1.0,-1.0, new String[]{"three"});
         List<ClassStoryInfo> stories = userDb.getAllStories();
         for (ClassStoryInfo s : stories) {
             Log.d("Story information:", s.toString());
@@ -316,6 +312,11 @@ public class MainActivity extends ActionBarActivity {
     public void onTouchLeftDrawer(final int position) {
         //{"Statistics","Reputation","Edit User","Logout","Settings","Feedback"}
         switch (position) {
+            case 0:
+                if (FragmentLogIn.getCurrentUser().getUserName() == null) {
+                    openFragment(new FragmentLogIn());
+                }
+                break;
             case 1:
                 openFragment(new FragmentUserStatistics());
                 break;
@@ -326,8 +327,13 @@ public class MainActivity extends ActionBarActivity {
                 openFragment(new FragmentUserEdit());
                 break;
             case 4:
-                //TODO: LOGOUT ACTION
-                Toast.makeText(MainActivity.this, "Logged Out. JK TODO", Toast.LENGTH_SHORT).show();
+                if (FragmentLogIn.getCurrentUser().getUserName() != null) {
+                    FragmentLogIn.logOutUser();
+                    Toast.makeText(MainActivity.this, "You Have Been Logged Out.", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Please Log In Before You Log Out, Dummy", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case 5:
                 openFragment(new FragmentAppSettings());

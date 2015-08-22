@@ -39,7 +39,7 @@ public class MainLocationTab extends Fragment {
 
     private View myView;
     private DrawerLayout mDrawerLayout;
-    private static double LOCATION_QUEUE_RADIUS = 500.0; //TODO: what is the location queue radisu supposed to be?
+    private static double LOCATION_QUEUE_RADIUS = 0.001; //TODO: what is the location queue radisu supposed to be?
     private static ClassLocationInfo currentLocationInfo;
     private static LocationListener mLocationListener;
     private static RecyclerView mRecyclerView;
@@ -97,12 +97,13 @@ public class MainLocationTab extends Fragment {
                         return false;
                     }
                     @Override
-                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         Log.w("swipeRecyclerView", "Left");
                         AdapterStoryRecycler updatedAdapter = (AdapterStoryRecycler) recyclerView.getAdapter();
                         UserStoryDb userDb = MainUserTab.getUserDb();
                         for (int position : reverseSortedPositions) {
                             Log.w("SwipeableRecyclerViewTouchListener " + String.valueOf(position), String.valueOf(position));
+                            mRecyclerView.getAdapter().notifyItemInserted(position);
                             ClassStoryInfo swipedStory = updatedAdapter.getItem(position);
                             userDb.createStory(swipedStory);
                             updatedAdapter = new AdapterStoryRecycler(userDb.getAllStories());
@@ -116,7 +117,7 @@ public class MainLocationTab extends Fragment {
                         return;
                     }
                     @Override
-                    public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                    public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                         Log.w("swipeRecyclerView", "Right");
                     }
                 });
@@ -202,13 +203,13 @@ public class MainLocationTab extends Fragment {
         public void sendStory(@Body ClassStoryInfo story, Callback<String> str);
 
         @GET("/stories/{longitude}/{latitude}/{radius}")
-        public void getLocationStories(@Path("longitude") long longitude,
-                                       @Path("latitude") long latitude, @Path("radius") long radius,
+        public void getLocationStories(@Path("longitude") double longitude,
+                                       @Path("latitude") double latitude, @Path("radius") double radius,
                                        Callback<List<TempStory>> stories);
 
     }
 
-    public static List<ClassStoryInfo> getLocationStories(long longitude, long latitude, long radius) {
+    public static List<ClassStoryInfo> getLocationStories(double longitude, double latitude, double radius) {
         final List<ClassStoryInfo> result = new ArrayList<ClassStoryInfo>();
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -322,19 +323,19 @@ public class MainLocationTab extends Fragment {
 
     public static void refreshLocationRecycler() {
         if (mRecyclerView != null) {
-            //getCurrentLocation();
-            //AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(getLocationStories(currentLocationInfo.getLatitude(),currentLocationInfo.getLongitude(), currentLocationInfo.getRadius()));
-            getLocationStories(40,40,200);
+            getCurrentLocation();
+            AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(getLocationStories(currentLocationInfo.getLongitude(),currentLocationInfo.getLatitude(), LOCATION_QUEUE_RADIUS));
+            //getLocationStories(40,40,200);
             //AdapterStoryRecycler updatedAdapter = new AdapterStoryRecycler(newStories);
-            //mRecyclerView.setAdapter(updatedAdapter);
-            //updatedAdapter.notifyDataSetChanged();
+            mRecyclerView.setAdapter(updatedAdapter);
+            updatedAdapter.notifyDataSetChanged();
         }
     }
 
     private static void updateLocationHeader() {
-        RecyclerView mRightDrawer = (RecyclerView) activity.findViewById(R.id.right_RecyclerView);
-        AdapterRightDrawerRecycler mRightDrawerAdapter = (AdapterRightDrawerRecycler) mRightDrawer.getAdapter();
-        mRightDrawerAdapter.setHeaderText(currentLocationInfo.getLatitude(),
+        //RecyclerView mRightDrawer = (RecyclerView) activity.findViewById(R.id.right_RecyclerView);
+        //AdapterRightDrawerRecycler mRightDrawerAdapter = (AdapterRightDrawerRecycler) mRightDrawer.getAdapter();
+        AdapterRightDrawerRecycler.setHeaderText(currentLocationInfo.getLatitude(),
                                           currentLocationInfo.getLongitude(),
                                           String.valueOf(currentLocationInfo.getLocationName()));
     }

@@ -59,6 +59,10 @@ public class NewStoryTab extends Fragment {
                     Toast.makeText(getActivity(),"We're going to need a longer title than that, bud",Toast.LENGTH_LONG).show();
                     return;
                 }
+                if (FragmentLogIn.getCurrentUser().getUserName() == null){
+                    Toast.makeText(getActivity(),"Please log in before posting", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 String[] tags = getTagsFromFlowLayout(tagsView);
                 if (tags.length == 0){
@@ -76,8 +80,7 @@ public class NewStoryTab extends Fragment {
                 Date date= new Date();
                 long timestamp = date.getTime();
 
-                //TODO: save information about original poster
-                String poster = "Current User";
+                String poster = FragmentLogIn.getCurrentUser().getUserName();
 
                 userDB = new UserStoryDb(getActivity());
                 try{
